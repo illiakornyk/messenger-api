@@ -4,6 +4,10 @@
 
 This project is a simple messenger application, similar to Telegram, that allows users to communicate with each other via text messages. Users can find each other using unique nicknames. The application will be developed using a microservice architecture, with a backend written in Node.js and Java Spring, and a frontend built with React.js. Data will be stored in the cloud using PostgreSQL for user authentication and login data, and MongoDB for streaming user data, such as messages.
 
+## Author
+
+This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI.
+
 ## Features
 
 - User registration and authentication
@@ -87,6 +91,10 @@ The project can be set up and run using Docker
 ### Deployed Version
 
 The deployed version of this application can be found [here](https://messenger-api-2930.onrender.com/).
+
+### API Documentation
+
+For testing and API documentation, Swagger is used. You can find the documentation at the endpoint `/docs`.
 
 ## Usage
 

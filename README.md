@@ -102,7 +102,40 @@ For testing and API documentation, Swagger is used. You can find the documentati
 - Find Users: Search for users by their nickname.
 - Messaging: Send and receive messages in real time.
 
-### Future Improvements
+## Database Structure
+
+![Database diagram](./assets/database_diagram.svg)
+
+### User Table (PostgreSQL):
+
+- id: Unique identifier for each user.
+- name: User’s name.
+- email: User’s email address.
+- password: Hashed password for user authentication.
+- createdAt and updatedAt: Timestamps to track user creation and updates.
+
+### Chat Collection (MongoDB):
+
+- id: Unique identifier for each chat.
+- usersIds: Array of user IDs representing the participants in the chat.
+- createdAt and updatedAt: Timestamps to track when the chat was created and last updated.
+
+### Message Collection (MongoDB):
+
+- id: Unique identifier for each message.
+- senderId: Reference to the id of the user who sent the message.
+- receiverIds: Array of user IDs representing recipients of the message.
+- content: The text content of the message.
+- createdAt and updatedAt: Timestamps to track message creation and updates.
+
+### Relationships
+
+- User and Chat:
+  A user can participate in multiple chats, and a chat must have at least one user.
+- Chat and Message:
+  Each chat can contain multiple messages, but each message belongs to only one chat.
+
+## Future Improvements
 
 - Implement message notifications
 - Add support for multimedia messages (images, videos)

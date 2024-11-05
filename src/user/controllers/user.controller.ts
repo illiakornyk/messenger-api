@@ -6,8 +6,8 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { User } from './user.entity';
+import { UserService } from '../services/user.service';
+import { User } from '../classes/user.class';
 
 @ApiTags('users')
 @Controller('users')

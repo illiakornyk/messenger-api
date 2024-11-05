@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ChatModule } from './chat/chat.module';
     HealthcheckModule,
     UserModule,
     ChatModule,
+    MessagesModule,
   ],
 
   controllers: [AppController],

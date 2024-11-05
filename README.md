@@ -135,7 +135,7 @@ For testing and API documentation, Swagger is used. You can find the documentati
 - Chat and Message:
   Each chat can contain multiple messages, but each message belongs to only one chat.
 
-### Future Improvements
+## Future Improvements
 
 - Implement message notifications
 - Add support for multimedia messages (images, videos)

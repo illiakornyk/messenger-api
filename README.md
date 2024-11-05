@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is a simple messenger application, similar to Telegram, that allows users to communicate with each other via text messages. Users can find each other using unique nicknames. The application will be developed using a microservice architecture, with a backend written in Node.js and Java Spring, and a frontend built with React.js. Data will be stored in the cloud using PostgreSQL for user authentication and login data, and MongoDB for streaming user data, such as messages.
+This project is a simple messenger application, similar to Telegram, that allows users to communicate with each other via text messages. Users can find each other using unique nicknames. The application will be developed using a microservice architecture, with a backend written in Node.js, and a frontend built with React.js. Data will be stored in the cloud using PostgreSQL for user authentication and login data, and MongoDB for streaming user data, such as messages.
 
 ## Author
 
@@ -19,7 +19,7 @@ This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI
 ## Technology Stack
 
 - **Frontend:** React.js
-- **Backend:** Node.js and Java Spring (Microservices)
+- **Backend:** Node.js
 - **Databases:**
   - PostgreSQL (for user authentication)
   - MongoDB (for messages and streaming data)
@@ -30,7 +30,7 @@ This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI
 
 ### Prerequisites
 
-- **Node.js** installed on your machine (this repository contains only the Node.js service)
+- **Node.js** installed on your machine
 - **MongoDB** (can be set up locally or run using Docker)
 - **Docker** and **Docker Compose** installed (if using Docker, local installations are not required)
 

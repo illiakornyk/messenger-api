@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { DatabaseModule } from './database/database.module';
     }),
     DatabaseModule,
     HealthcheckModule,
+    UserModule,
   ],
 
   controllers: [AppController],

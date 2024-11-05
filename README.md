@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is a simple messenger application, similar to Telegram, that allows users to communicate with each other via text messages. Users can find each other using unique nicknames. The application will be developed using a microservice architecture, with a backend written in Node.js and Java Spring, and a frontend built with React.js. Data will be stored in the cloud using PostgreSQL for user authentication and login data, and MongoDB for streaming user data, such as messages.
+This project is a simple messenger application, similar to Telegram, that allows users to communicate with each other via text messages. Users can find each other using unique nicknames. The application will be developed using a microservice architecture, with a backend written in Node.js, and a frontend built with React.js. Data will be stored in the cloud using PostgreSQL for user authentication and login data, and MongoDB for streaming user data, such as messages.
 
 ## Author
 
@@ -19,7 +19,7 @@ This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI
 ## Technology Stack
 
 - **Frontend:** React.js
-- **Backend:** Node.js and Java Spring (Microservices)
+- **Backend:** Node.js
 - **Databases:**
   - PostgreSQL (for user authentication)
   - MongoDB (for messages and streaming data)
@@ -30,7 +30,7 @@ This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI
 
 ### Prerequisites
 
-- **Node.js** installed on your machine (this repository contains only the Node.js service)
+- **Node.js** installed on your machine
 - **MongoDB** (can be set up locally or run using Docker)
 - **Docker** and **Docker Compose** installed (if using Docker, local installations are not required)
 
@@ -101,6 +101,39 @@ For testing and API documentation, Swagger is used. You can find the documentati
 - Register: Users can create an account using their nickname.
 - Find Users: Search for users by their nickname.
 - Messaging: Send and receive messages in real time.
+
+## Database Structure
+
+![Database diagram](./assets/database_diagram.svg)
+
+### User Table (PostgreSQL):
+
+- id: Unique identifier for each user.
+- name: User’s name.
+- email: User’s email address.
+- password: Hashed password for user authentication.
+- createdAt and updatedAt: Timestamps to track user creation and updates.
+
+### Chat Collection (MongoDB):
+
+- id: Unique identifier for each chat.
+- usersIds: Array of user IDs representing the participants in the chat.
+- createdAt and updatedAt: Timestamps to track when the chat was created and last updated.
+
+### Message Collection (MongoDB):
+
+- id: Unique identifier for each message.
+- senderId: Reference to the id of the user who sent the message.
+- receiverIds: Array of user IDs representing recipients of the message.
+- content: The text content of the message.
+- createdAt and updatedAt: Timestamps to track message creation and updates.
+
+### Relationships
+
+- User and Chat:
+  A user can participate in multiple chats, and a chat must have at least one user.
+- Chat and Message:
+  Each chat can contain multiple messages, but each message belongs to only one chat.
 
 ### Future Improvements
 

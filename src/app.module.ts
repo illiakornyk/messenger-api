@@ -14,7 +14,7 @@ import { MessagesModule } from './messages/messages.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    DatabaseModule,
+    // DatabaseModule,
     HealthcheckModule,
     UserModule,
     ChatModule,

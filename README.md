@@ -94,7 +94,17 @@ The deployed version of this application can be found [here](https://messenger-a
 
 ### API Documentation
 
+#### Swagger
+
 For testing and API documentation, Swagger is used. You can find the documentation at the endpoint `/docs`.
+
+- [Swagger](https://messenger-api-2930.onrender.com/docs)
+
+#### Postman
+
+- [Postman flow](https://web.postman.co/workspace/e7b4d90b-5e29-44c8-8228-fb7b46bbfea0/flow/672a73b035ab526e247c29e4)
+
+- [Postman collection](./assets/Messenger%20App.postman_collection.json)
 
 ## Usage
 

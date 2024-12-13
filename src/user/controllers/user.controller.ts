@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Body,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -36,17 +44,19 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a user by ID' })
-  @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, description: 'The found user', type: User })
-  async findOne(@Param('id') id: string): Promise<User | null> {
+  async findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<User | null> {
     return this.userService.findOne(id);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user by ID' })
-  @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, description: 'User has been deleted' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     await this.userService.remove(id);
   }
 }

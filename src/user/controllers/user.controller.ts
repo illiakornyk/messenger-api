@@ -6,8 +6,9 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { UserService } from '../services/user.service';
-import { User } from '../classes/user.class';
+import { CreateUserDto } from '@app/user/dtos/create-user.dto';
+import { User } from '@app/user/entities/user.entity';
+import { UserService } from '@app/user/services/user.service';
 
 @ApiTags('users')
 @Controller('users')
@@ -21,8 +22,8 @@ export class UserController {
     description: 'The user has been created.',
     type: User,
   })
-  @ApiBody({ type: User })
-  async create(@Body() user: User): Promise<User> {
+  @ApiBody({ type: CreateUserDto })
+  async create(@Body() user: CreateUserDto): Promise<User> {
     return this.userService.createOne(user);
   }
 

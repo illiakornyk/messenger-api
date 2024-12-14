@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Body,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -6,8 +14,9 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { UserService } from '../services/user.service';
-import { User } from '../classes/user.class';
+import { CreateUserDto } from '@app/user/dtos/create-user.dto';
+import { User } from '@app/user/entities/user.entity';
+import { UserService } from '@app/user/services/user.service';
 
 @ApiTags('users')
 @Controller('users')
@@ -21,8 +30,8 @@ export class UserController {
     description: 'The user has been created.',
     type: User,
   })
-  @ApiBody({ type: User })
-  async create(@Body() user: User): Promise<User> {
+  @ApiBody({ type: CreateUserDto })
+  async create(@Body() user: CreateUserDto): Promise<User> {
     return this.userService.createOne(user);
   }
 
@@ -35,17 +44,19 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a user by ID' })
-  @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, description: 'The found user', type: User })
-  async findOne(@Param('id') id: string): Promise<User | null> {
+  async findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<User | null> {
     return this.userService.findOne(id);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user by ID' })
-  @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, description: 'User has been deleted' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     await this.userService.remove(id);
   }
 }

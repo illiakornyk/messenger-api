@@ -6,21 +6,21 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({name: 'user_accounts'})
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ length: 100 })
   name: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 50 })
   username: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ length: 128 })
   password: string;
 
   @CreateDateColumn()

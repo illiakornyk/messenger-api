@@ -1,9 +1,11 @@
+import { Chat } from '@app/chat/entities/chat.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity({name: 'user_accounts'})
@@ -22,6 +24,10 @@ export class User {
 
   @Column({ length: 128 })
   password: string;
+
+
+  @ManyToMany(() => Chat, (chat) => chat.users)
+  chats: Chat[];
 
   @CreateDateColumn()
   createdAt: Date;

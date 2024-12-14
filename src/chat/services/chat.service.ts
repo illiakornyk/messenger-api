@@ -1,49 +1,122 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { Chat } from '../classes/chat.class';
+import { Chat } from '@app/chat/entities/chat.entity';
+import { User } from '@app/user/entities/user.entity';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ChatService {
-  private chats = new Map<string, Chat>();
+  private readonly MAX_USERS_IN_CHAT = 50;
+  constructor(
+    @InjectRepository(Chat)
+    private readonly chatRepository: Repository<Chat>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-  createChat(usersIds: string[]): Chat {
-    const newChat: Chat = {
-      id: uuidv4(),
-      usersIds,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
 
-    this.chats.set(newChat.id, newChat);
-    return newChat;
+async createChat(usersIds: string[]): Promise<any> {
+  if (usersIds.length === 0) {
+    throw new BadRequestException('A chat must have at least one user.');
   }
 
-  getChat(chatId: string): Chat {
-    const chat = this.chats.get(chatId);
+  if (usersIds.length > this.MAX_USERS_IN_CHAT) {
+    throw new BadRequestException(
+      `A chat cannot have more than ${this.MAX_USERS_IN_CHAT} users.`,
+    );
+  }
+
+  const users = await this.userRepository.findBy({ id: In(usersIds) });
+
+  if (users.length !== usersIds.length) {
+    throw new BadRequestException('Some user IDs are invalid.');
+  }
+
+  const chat = this.chatRepository.create({
+    users,
+  });
+
+  const savedChat = await this.chatRepository.save(chat);
+
+  const result = await this.chatRepository
+    .createQueryBuilder('chat')
+    .leftJoinAndSelect('chat.users', 'user')
+    .select([
+      'chat.id',
+      'chat.createdAt',
+      'chat.updatedAt',
+      'user.id',
+      'user.name',
+      'user.username',
+    ])
+    .where('chat.id = :chatId', { chatId: savedChat.id })
+    .getOne();
+
+  return result;
+}
+
+  async getChat(chatId: string): Promise<Chat> {
+    const chat = await this.chatRepository
+      .createQueryBuilder('chat')
+      .leftJoinAndSelect('chat.users', 'user')
+      .select([
+        'chat.id',
+        'chat.createdAt',
+        'chat.updatedAt',
+        'user.id',
+        'user.name',
+        'user.username',
+      ])
+      .where('chat.id = :chatId', { chatId })
+      .getOne();
+
     if (!chat) {
-      throw new NotFoundException(`Chat with ID ${chatId} not found`);
+      throw new NotFoundException(`Chat with ID ${chatId} not found.`);
     }
+
     return chat;
   }
 
-  getAllChats(): Chat[] {
-    return Array.from(this.chats.values());
+async getAllChats(): Promise<Chat[]> {
+  const chats = await this.chatRepository
+    .createQueryBuilder('chat')
+    .leftJoinAndSelect('chat.users', 'user')
+    .select([
+      'chat.id',
+      'chat.createdAt',
+      'chat.updatedAt',
+      'user.id',
+      'user.name',
+      'user.username',
+    ])
+    .getMany();
+
+  return chats;
+}
+
+
+  async findChatByUserId(userId: string): Promise<Chat> {
+    const chat = await this.chatRepository
+      .createQueryBuilder('chat')
+      .leftJoinAndSelect('chat.users', 'user')
+      .where('user.id = :userId', { userId })
+      .getOne();
+
+    if (!chat) {
+      throw new NotFoundException(`No chat found for user ID ${userId}.`);
+    }
+
+    return chat;
   }
 
-  findChatByUserId(userId: string): Chat {
-    for (const chat of this.chats.values()) {
-      if (chat.usersIds.includes(userId)) {
-        return chat;
-      }
-    }
-    throw new NotFoundException(`No chat found for user ID ${userId}`);
-  }
 
-  deleteChat(chatId: string): boolean {
-    const deleted = this.chats.delete(chatId);
-    if (!deleted) {
-      throw new NotFoundException(`Chat with ID ${chatId} not found`);
+  async deleteChat(chatId: string): Promise<boolean> {
+    const result = await this.chatRepository.delete(chatId);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Chat with ID ${chatId} not found.`);
     }
+
     return true;
   }
 }

@@ -1,4 +1,5 @@
 import { Chat } from '@app/chat/entities/chat.entity';
+import { CreateChatResponse } from '@app/chat/interfaces/create-chat-response.interface';
 import { User } from '@app/user/entities/user.entity';
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +16,7 @@ export class ChatService {
   ) {}
 
 
-async createChat(usersIds: string[]): Promise<any> {
+async createChat(usersIds: string[]): Promise<CreateChatResponse> {
   if (usersIds.length === 0) {
     throw new BadRequestException('A chat must have at least one user.');
   }

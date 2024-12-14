@@ -4,9 +4,6 @@ export class Chat {
   @ApiProperty({ type: String, format: 'uuid', required: true })
   id: string;
 
-  @ApiProperty({ type: [String], format: 'uuid', required: true })
-  usersIds: string[];
-
   @ApiProperty({ type: Date, required: true })
   createdAt: Date;
 

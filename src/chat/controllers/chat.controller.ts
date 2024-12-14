@@ -17,8 +17,9 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { ChatService } from '../services/chat.service';
-import { Chat } from '../entities/chat.entity'; // Use Chat entity here
-import { CreateChatDto } from '../dtos/create-chat.dto'; // DTO for input validation
+import { Chat } from '../entities/chat.entity';
+import { CreateChatDto } from '../dtos/create-chat.dto';
+import { CreateChatResponse } from '@app/chat/classes/create-chat-response.class';
 
 @ApiTags('chats')
 @Controller('chats')
@@ -30,10 +31,10 @@ export class ChatController {
   @ApiResponse({
     status: 201,
     description: 'The chat has been created.',
-    type: Chat,
+    type: CreateChatResponse,
   })
   @ApiBody({ type: CreateChatDto })
-  async createChat(@Body() createChatDto: CreateChatDto): Promise<Chat> {
+  async createChat(@Body() createChatDto: CreateChatDto): Promise<CreateChatResponse> {
     return await this.chatService.createChat(createChatDto.userIds);
   }
 

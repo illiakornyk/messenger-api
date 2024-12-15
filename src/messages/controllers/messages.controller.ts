@@ -7,6 +7,7 @@ import {
   Query,
   Body,
   BadRequestException,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,8 +17,11 @@ import {
   ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
-import { Message } from '../classes/messages.class';
 import { MessagesService } from '../services/messages.service';
+import { CreateMessageDto } from '../dtos/create-message.dto';
+import { Message } from '../entities/message.entity';
+import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
+import { CreateMessageResponse as CreateMessageResponseClass } from '@app/messages/classes/create-message-response.class';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -29,20 +33,22 @@ export class MessagesController {
   @ApiResponse({
     status: 201,
     description: 'The message has been created.',
-    type: Message,
+    type: CreateMessageResponseClass,
   })
-  @ApiBody({ type: Message })
-  createMessage(
-    @Body('senderId') senderId: string,
-    @Body('receiverIds') receiverIds: string[],
-    @Body('content') content: string,
-  ): Message {
-    return this.messagesService.createMessage(senderId, receiverIds, content);
+  @ApiBody({ type: CreateMessageDto })
+  async createMessage(
+    @Body() createMessageDto: CreateMessageDto,
+  ): Promise<CreateMessageResponse> {
+    return await this.messagesService.createMessage(
+      createMessageDto.senderId,
+      createMessageDto.chatId,
+      createMessageDto.content,
+    );
   }
 
   @Get()
   @ApiOperation({
-    summary: 'Retrieve all messages or filter by sender or receiver',
+    summary: 'Retrieve all messages or filter by sender or chat',
   })
   @ApiQuery({
     name: 'senderId',
@@ -51,48 +57,49 @@ export class MessagesController {
     description: 'UUID of the sender',
   })
   @ApiQuery({
-    name: 'receiverId',
+    name: 'chatId',
     type: 'string',
     required: false,
-    description: 'UUID of a receiver',
+    description: 'UUID of the chat',
   })
   @ApiResponse({
     status: 200,
     description: 'List of messages or filtered messages',
     type: [Message],
   })
-  getMessages(
+  async getMessages(
     @Query('senderId') senderId?: string,
-    @Query('receiverId') receiverId?: string,
-  ): Message[] {
-    if (senderId) {
-      return this.messagesService.getMessagesBySenderId(senderId);
-    } else if (receiverId) {
-      return this.messagesService.getMessagesByReceiverId(receiverId);
-    }
-
-    if (senderId && receiverId) {
+    @Query('chatId') chatId?: string,
+  ): Promise<Message[]> {
+    if (senderId && chatId) {
       throw new BadRequestException(
-        'You can not pass both senderId and receiverId simultaneously.',
+        'You cannot filter by both senderId and chatId simultaneously.',
       );
     }
 
-    return this.messagesService.getAllMessages();
+    if (senderId) {
+      return await this.messagesService.getMessagesBySenderId(senderId);
+    } else if (chatId) {
+      return await this.messagesService.getMessagesByChatId(chatId);
+    }
+
+    return await this.messagesService.getAllMessages();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a message by ID' })
   @ApiParam({ name: 'id', type: 'string', description: 'UUID of the message' })
   @ApiResponse({ status: 200, description: 'The found message', type: Message })
-  getMessageById(@Param('id') id: string): Message {
-    return this.messagesService.getMessageById(id);
+  async getMessageById(@Param('id') id: string): Promise<Message> {
+    return await this.messagesService.getMessageById(id);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a message by ID' })
   @ApiParam({ name: 'id', type: 'string', description: 'UUID of the message' })
-  @ApiResponse({ status: 200, description: 'Message has been deleted' })
-  deleteMessage(@Param('id') id: string): boolean {
-    return this.messagesService.deleteMessage(id);
+  @ApiResponse({ status: 204, description: 'Message has been deleted' })
+  @HttpCode(204)
+  async deleteMessage(@Param('id') id: string): Promise<void> {
+    await this.messagesService.deleteMessage(id);
   }
 }

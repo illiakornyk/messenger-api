@@ -170,34 +170,65 @@ These scripts ensure that your database schema stays consistent with the applica
 
 ![Database diagram](./assets/database_diagram.svg)
 
-### User Table (PostgreSQL):
+### Tables
 
-- id: Unique identifier for each user.
-- name: User’s name.
-- email: User’s email address.
-- password: Hashed password for user authentication.
-- createdAt and updatedAt: Timestamps to track user creation and updates.
+1. **`user_accounts`:**
 
-### Chat Collection (MongoDB):
+   - Represents the users in the system.
+   - **Columns:**
+     - `id`: Unique identifier for each user.
+     - `name`: User's name.
+     - `username`: Unique nickname for the user.
+     - `email`: User's email address.
+     - `password`: Hashed password for authentication.
+     - `createdAt` and `updatedAt`: Timestamps for tracking user creation and updates.
 
-- id: Unique identifier for each chat.
-- usersIds: Array of user IDs representing the participants in the chat.
-- createdAt and updatedAt: Timestamps to track when the chat was created and last updated.
+2. **`chats`:**
 
-### Message Collection (MongoDB):
+   - Represents individual chats or group conversations.
+   - **Columns:**
+     - `id`: Unique identifier for each chat.
+     - `createdAt` and `updatedAt`: Timestamps for chat creation and updates.
 
-- id: Unique identifier for each message.
-- senderId: Reference to the id of the user who sent the message.
-- receiverIds: Array of user IDs representing recipients of the message.
-- content: The text content of the message.
-- createdAt and updatedAt: Timestamps to track message creation and updates.
+3. **`chat_users`:**
 
-### Relationships
+   - Represents the many-to-many relationship between users and chats.
+   - **Columns:**
+     - `chat_id`: Foreign key referencing `chats.id`.
+     - `user_id`: Foreign key referencing `user_accounts.id`.
 
-- User and Chat:
-  A user can participate in multiple chats, and a chat must have at least one user.
-- Chat and Message:
-  Each chat can contain multiple messages, but each message belongs to only one chat.
+4. **`messages`:**
+
+   - Represents the messages exchanged within chats.
+   - **Columns:**
+     - `id`: Unique identifier for each message.
+     - `content`: Text content of the message.
+     - `sender_id`: Foreign key referencing `user_accounts.id`, indicating the sender of the message.
+     - `chat_id`: Foreign key referencing `chats.id`, indicating the chat the message belongs to.
+     - `createdAt` and `updatedAt`: Timestamps for tracking when the message was sent and updated.
+
+5. **`migrations`:**
+   - Tracks database schema changes.
+   - **Columns:**
+     - `id`: Unique identifier for each migration.
+     - `timestamp`: Time when the migration was applied.
+     - `name`: Description of the migration.
+
+#### Relationships
+
+1. **Users and Chats (`user_accounts` ↔ `chats`):**
+
+   - **Type:** Many-to-Many (via `chat_users`)
+   - **Explanation:** A user can participate in multiple chats, and each chat can include multiple users.
+
+2. **Chats and Messages (`chats` ↔ `messages`):**
+
+   - **Type:** One-to-Many
+   - **Explanation:** Each chat can contain multiple messages, but each message belongs to only one chat.
+
+3. **Users and Messages (`user_accounts` ↔ `messages`):**
+   - **Type:** One-to-Many
+   - **Explanation:** A user can send multiple messages, but each message has a single sender.
 
 ## Future Improvements
 

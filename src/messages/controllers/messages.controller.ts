@@ -22,6 +22,7 @@ import { CreateMessageDto } from '../dtos/create-message.dto';
 import { Message } from '../entities/message.entity';
 import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
 import { CreateMessageResponse as CreateMessageResponseClass } from '@app/messages/classes/create-message-response.class';
+import { GetMessageResponse } from '../interfaces/get-message-response.interface';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -70,7 +71,7 @@ export class MessagesController {
   async getMessages(
     @Query('senderId') senderId?: string,
     @Query('chatId') chatId?: string,
-  ): Promise<Message[]> {
+  ): Promise<GetMessageResponse[]> {
     if (senderId && chatId) {
       throw new BadRequestException(
         'You cannot filter by both senderId and chatId simultaneously.',
@@ -90,7 +91,7 @@ export class MessagesController {
   @ApiOperation({ summary: 'Retrieve a message by ID' })
   @ApiParam({ name: 'id', type: 'string', description: 'UUID of the message' })
   @ApiResponse({ status: 200, description: 'The found message', type: Message })
-  async getMessageById(@Param('id') id: string): Promise<Message> {
+  async getMessageById(@Param('id') id: string): Promise<GetMessageResponse> {
     return await this.messagesService.getMessageById(id);
   }
 

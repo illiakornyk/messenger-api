@@ -10,6 +10,7 @@ import { Chat } from '@app/chat/entities/chat.entity';
 import { User } from '@app/user/entities/user.entity';
 import { formatUser } from '@app/common/utils/format-user.util';
 import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
+import { GetMessageResponse } from '../interfaces/get-message-response.interface';
 
 @Injectable()
 export class MessagesService {
@@ -59,7 +60,7 @@ export class MessagesService {
     };
   }
 
-  async getMessageById(messageId: string): Promise<Message> {
+  async getMessageById(messageId: string): Promise<GetMessageResponse> {
     const message = await this.messageRepository.findOne({
       where: { id: messageId },
       relations: ['sender', 'chat'],
@@ -69,10 +70,10 @@ export class MessagesService {
       throw new NotFoundException(`Message with ID ${messageId} not found.`);
     }
 
-    return message;
+    return this.formatMessageResponse(message);
   }
 
-  async getMessagesBySenderId(senderId: string): Promise<Message[]> {
+  async getMessagesBySenderId(senderId: string): Promise<GetMessageResponse[]> {
     const messages = await this.messageRepository.find({
       where: { senderId },
       relations: ['chat'],
@@ -84,10 +85,10 @@ export class MessagesService {
       );
     }
 
-    return messages;
+    return messages.map(this.formatMessageResponse);
   }
 
-  async getMessagesByChatId(chatId: string): Promise<Message[]> {
+  async getMessagesByChatId(chatId: string): Promise<GetMessageResponse[]> {
     const messages = await this.messageRepository.find({
       where: { chatId },
       relations: ['sender'], // Optionally include sender details
@@ -97,13 +98,15 @@ export class MessagesService {
       throw new NotFoundException(`No messages found for chat ID ${chatId}.`);
     }
 
-    return messages;
+    return messages.map(this.formatMessageResponse);
   }
 
-  async getAllMessages(): Promise<Message[]> {
-    return await this.messageRepository.find({
+  async getAllMessages(): Promise<GetMessageResponse[]> {
+    const messages = await this.messageRepository.find({
       relations: ['sender', 'chat'], // Include sender and chat relations
     });
+
+    return messages.map(this.formatMessageResponse);
   }
 
   async deleteMessage(messageId: string): Promise<boolean> {
@@ -112,5 +115,16 @@ export class MessagesService {
       throw new NotFoundException(`Message with ID ${messageId} not found.`);
     }
     return true;
+  }
+
+  private formatMessageResponse(message: Message): GetMessageResponse {
+    return {
+      id: message.id,
+      senderId: message.senderId,
+      chatId: message.chatId,
+      content: message.content,
+      createdAt: message.createdAt,
+      updatedAt: message.updatedAt,
+    };
   }
 }

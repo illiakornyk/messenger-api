@@ -19,7 +19,9 @@ import { Message } from '@app/messages/entities/message.entity';
         database: configService.get<string>('POSTGRES_DB'),
         entities: [User, Chat, Message],
         synchronize: false,
-        migrations: [],
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
   ],

@@ -15,18 +15,12 @@ export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'uuid' })
-  senderId: string;
-
   @ManyToOne(() => User, (user) => user.id, { nullable: false })
-  @JoinColumn({ name: 'senderId' })
+  @JoinColumn({ name: 'sender_id' })
   sender: User;
 
-  @Column({ type: 'uuid' })
-  chatId: string;
-
   @ManyToOne(() => Chat, (chat) => chat.id, { nullable: false })
-  @JoinColumn({ name: 'chatId' })
+  @JoinColumn({ name: 'chat_id' })
   chat: Chat;
 
   @Column({ type: 'text' })

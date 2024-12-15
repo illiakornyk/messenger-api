@@ -35,14 +35,24 @@ export class MessagesService {
       throw new BadRequestException(`Sender with ID ${senderId} not found.`);
     }
 
-    const chat = await this.chatRepository.findOne({ where: { id: chatId } });
+    const chat = await this.chatRepository.findOne({
+      where: { id: chatId },
+      relations: ['users'],
+    });
     if (!chat) {
       throw new BadRequestException(`Chat with ID ${chatId} not found.`);
     }
 
+    const isUserInChat = chat.users.some((user) => user.id === senderId);
+    if (!isUserInChat) {
+      throw new BadRequestException(
+        `Sender with ID ${senderId} is not a participant in chat with ID ${chatId}.`,
+      );
+    }
+
     const newMessage = this.messageRepository.create({
-      senderId,
-      chatId,
+      sender,
+      chat,
       content,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -53,7 +63,7 @@ export class MessagesService {
     return {
       id: savedMessage.id,
       content: savedMessage.content,
-      chatId: savedMessage.chatId,
+      chatId: savedMessage.chat.id,
       createdAt: savedMessage.createdAt,
       updatedAt: savedMessage.updatedAt,
       sender: formatUser(sender),
@@ -75,8 +85,8 @@ export class MessagesService {
 
   async getMessagesBySenderId(senderId: string): Promise<GetMessageResponse[]> {
     const messages = await this.messageRepository.find({
-      where: { senderId },
-      relations: ['chat'],
+      where: { sender: { id: senderId } },
+      relations: ['chat', 'sender'],
     });
 
     if (messages.length === 0) {
@@ -90,8 +100,8 @@ export class MessagesService {
 
   async getMessagesByChatId(chatId: string): Promise<GetMessageResponse[]> {
     const messages = await this.messageRepository.find({
-      where: { chatId },
-      relations: ['sender'], // Optionally include sender details
+      where: { chat: { id: chatId } },
+      relations: ['chat', 'sender'],
     });
 
     if (messages.length === 0) {
@@ -103,7 +113,7 @@ export class MessagesService {
 
   async getAllMessages(): Promise<GetMessageResponse[]> {
     const messages = await this.messageRepository.find({
-      relations: ['sender', 'chat'], // Include sender and chat relations
+      relations: ['sender', 'chat'],
     });
 
     return messages.map(this.formatMessageResponse);
@@ -120,8 +130,8 @@ export class MessagesService {
   private formatMessageResponse(message: Message): GetMessageResponse {
     return {
       id: message.id,
-      senderId: message.senderId,
-      chatId: message.chatId,
+      senderId: message.sender.id,
+      chatId: message.chat.id,
       content: message.content,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt,

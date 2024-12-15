@@ -1,4 +1,4 @@
-export interface GetMessageResponse {
+export interface IGetMessageResponse {
   id: string;
   senderId: string;
   chatId: string;

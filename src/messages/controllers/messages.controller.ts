@@ -8,6 +8,7 @@ import {
   Body,
   BadRequestException,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,12 +18,10 @@ import {
   ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
-import { MessagesService } from '../services/messages.service';
-import { CreateMessageDto } from '../dtos/create-message.dto';
-import { Message } from '../entities/message.entity';
-import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
-import { CreateMessageResponse as CreateMessageResponseClass } from '@app/messages/classes/create-message-response.class';
-import { GetMessageResponse } from '../interfaces/get-message-response.interface';
+import { MessagesService } from '@app/messages/services/messages.service';
+import { CreateMessageDto } from '@app/messages/dtos/create-message.dto';
+import { IGetMessageResponse } from '@app/messages/interfaces/get-message-response.interface';
+import { GetMessageResponse } from '@app/messages/classes/get-message-response.class';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -32,14 +31,14 @@ export class MessagesController {
   @Post()
   @ApiOperation({ summary: 'Create a new message' })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'The message has been created.',
-    type: CreateMessageResponseClass,
+    type: GetMessageResponse,
   })
   @ApiBody({ type: CreateMessageDto })
   async createMessage(
     @Body() createMessageDto: CreateMessageDto,
-  ): Promise<CreateMessageResponse> {
+  ): Promise<IGetMessageResponse> {
     return await this.messagesService.createMessage(
       createMessageDto.senderId,
       createMessageDto.chatId,
@@ -64,14 +63,15 @@ export class MessagesController {
     description: 'UUID of the chat',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'List of messages or filtered messages',
-    type: [Message],
+    type: () => GetMessageResponse,
+    isArray: true,
   })
   async getMessages(
     @Query('senderId') senderId?: string,
     @Query('chatId') chatId?: string,
-  ): Promise<GetMessageResponse[]> {
+  ): Promise<IGetMessageResponse[]> {
     if (senderId && chatId) {
       throw new BadRequestException(
         'You cannot filter by both senderId and chatId simultaneously.',
@@ -90,16 +90,23 @@ export class MessagesController {
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a message by ID' })
   @ApiParam({ name: 'id', type: 'string', description: 'UUID of the message' })
-  @ApiResponse({ status: 200, description: 'The found message', type: Message })
-  async getMessageById(@Param('id') id: string): Promise<GetMessageResponse> {
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The found message',
+    type: () => GetMessageResponse,
+  })
+  async getMessageById(@Param('id') id: string): Promise<IGetMessageResponse> {
     return await this.messagesService.getMessageById(id);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a message by ID' })
   @ApiParam({ name: 'id', type: 'string', description: 'UUID of the message' })
-  @ApiResponse({ status: 204, description: 'Message has been deleted' })
-  @HttpCode(204)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Message has been deleted',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteMessage(@Param('id') id: string): Promise<void> {
     await this.messagesService.deleteMessage(id);
   }

@@ -10,7 +10,7 @@ import { Chat } from '@app/chat/entities/chat.entity';
 import { User } from '@app/user/entities/user.entity';
 import { formatUser } from '@app/common/utils/format-user.util';
 import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
-import { GetMessageResponse } from '../interfaces/get-message-response.interface';
+import { IGetMessageResponse } from '../interfaces/get-message-response.interface';
 
 @Injectable()
 export class MessagesService {
@@ -27,7 +27,7 @@ export class MessagesService {
     senderId: string,
     chatId: string,
     content: string,
-  ): Promise<CreateMessageResponse> {
+  ): Promise<IGetMessageResponse> {
     const sender = await this.userRepository.findOne({
       where: { id: senderId },
     });
@@ -60,17 +60,19 @@ export class MessagesService {
 
     const savedMessage = await this.messageRepository.save(newMessage);
 
-    return {
-      id: savedMessage.id,
-      content: savedMessage.content,
-      chatId: savedMessage.chat.id,
-      createdAt: savedMessage.createdAt,
-      updatedAt: savedMessage.updatedAt,
-      sender: formatUser(sender),
-    };
+    // return {
+    //   id: savedMessage.id,
+    //   content: savedMessage.content,
+    //   chatId: savedMessage.chat.id,
+    //   createdAt: savedMessage.createdAt,
+    //   updatedAt: savedMessage.updatedAt,
+    //   sender: formatUser(sender),
+    // };
+
+    return this.formatMessageResponse(savedMessage);
   }
 
-  async getMessageById(messageId: string): Promise<GetMessageResponse> {
+  async getMessageById(messageId: string): Promise<IGetMessageResponse> {
     const message = await this.messageRepository.findOne({
       where: { id: messageId },
       relations: ['sender', 'chat'],
@@ -83,7 +85,9 @@ export class MessagesService {
     return this.formatMessageResponse(message);
   }
 
-  async getMessagesBySenderId(senderId: string): Promise<GetMessageResponse[]> {
+  async getMessagesBySenderId(
+    senderId: string,
+  ): Promise<IGetMessageResponse[]> {
     const messages = await this.messageRepository.find({
       where: { sender: { id: senderId } },
       relations: ['chat', 'sender'],
@@ -98,7 +102,7 @@ export class MessagesService {
     return messages.map(this.formatMessageResponse);
   }
 
-  async getMessagesByChatId(chatId: string): Promise<GetMessageResponse[]> {
+  async getMessagesByChatId(chatId: string): Promise<IGetMessageResponse[]> {
     const messages = await this.messageRepository.find({
       where: { chat: { id: chatId } },
       relations: ['chat', 'sender'],
@@ -111,7 +115,7 @@ export class MessagesService {
     return messages.map(this.formatMessageResponse);
   }
 
-  async getAllMessages(): Promise<GetMessageResponse[]> {
+  async getAllMessages(): Promise<IGetMessageResponse[]> {
     const messages = await this.messageRepository.find({
       relations: ['sender', 'chat'],
     });
@@ -127,7 +131,7 @@ export class MessagesService {
     return true;
   }
 
-  private formatMessageResponse(message: Message): GetMessageResponse {
+  private formatMessageResponse(message: Message): IGetMessageResponse {
     return {
       id: message.id,
       senderId: message.sender.id,

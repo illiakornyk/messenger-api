@@ -1,12 +1,13 @@
+import { Message } from '@app/messages/entities/message.entity';
 import { User } from '@app/user/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('chats')
@@ -27,6 +28,9 @@ export class Chat {
     },
   })
   users: User[];
+
+  @OneToMany(() => Message, (message) => message.chat)
+  messages: Message[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from '../user/entities/user.entity';
 import { Chat } from '@app/chat/entities/chat.entity';
+import { Message } from '@app/messages/entities/message.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Chat } from '@app/chat/entities/chat.entity';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-        entities: [User, Chat],
+        entities: [User, Chat, Message],
         synchronize: false,
         migrations: [],
       }),

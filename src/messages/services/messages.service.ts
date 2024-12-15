@@ -1,73 +1,115 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { Message } from '../classes/messages.class';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Message } from '../entities/message.entity';
+import { Chat } from '@app/chat/entities/chat.entity';
+import { User } from '@app/user/entities/user.entity';
+import { formatUser } from '@app/common/utils/format-user.util';
+import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
 
 @Injectable()
 export class MessagesService {
-  private messages = new Map<string, Message>();
+  constructor(
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
+    @InjectRepository(Chat)
+    private readonly chatRepository: Repository<Chat>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-  createMessage(
+  async createMessage(
     senderId: string,
-    receiverIds: string[],
+    chatId: string,
     content: string,
-  ): Message {
-    const newMessage: Message = {
-      id: uuidv4(),
+  ): Promise<CreateMessageResponse> {
+    const sender = await this.userRepository.findOne({
+      where: { id: senderId },
+    });
+    if (!sender) {
+      throw new BadRequestException(`Sender with ID ${senderId} not found.`);
+    }
+
+    const chat = await this.chatRepository.findOne({ where: { id: chatId } });
+    if (!chat) {
+      throw new BadRequestException(`Chat with ID ${chatId} not found.`);
+    }
+
+    const newMessage = this.messageRepository.create({
       senderId,
-      receiverIds,
+      chatId,
       content,
       createdAt: new Date(),
       updatedAt: new Date(),
-    };
+    });
 
-    this.messages.set(newMessage.id, newMessage);
-    return newMessage;
+    const savedMessage = await this.messageRepository.save(newMessage);
+
+    return {
+      id: savedMessage.id,
+      content: savedMessage.content,
+      chatId: savedMessage.chatId,
+      createdAt: savedMessage.createdAt,
+      updatedAt: savedMessage.updatedAt,
+      sender: formatUser(sender),
+    };
   }
 
-  getMessageById(messageId: string): Message {
-    const message = this.messages.get(messageId);
+  async getMessageById(messageId: string): Promise<Message> {
+    const message = await this.messageRepository.findOne({
+      where: { id: messageId },
+      relations: ['sender', 'chat'],
+    });
+
     if (!message) {
-      throw new NotFoundException(`Message with ID ${messageId} not found`);
+      throw new NotFoundException(`Message with ID ${messageId} not found.`);
     }
+
     return message;
   }
 
-  getMessagesBySenderId(senderId: string): Message[] {
-    const messages = Array.from(this.messages.values()).filter(
-      (message) => message.senderId === senderId,
-    );
+  async getMessagesBySenderId(senderId: string): Promise<Message[]> {
+    const messages = await this.messageRepository.find({
+      where: { senderId },
+      relations: ['chat'],
+    });
 
     if (messages.length === 0) {
       throw new NotFoundException(
-        `No messages found for sender ID ${senderId}`,
+        `No messages found for sender ID ${senderId}.`,
       );
     }
 
     return messages;
   }
 
-  getMessagesByReceiverId(receiverId: string): Message[] {
-    const messages = Array.from(this.messages.values()).filter((message) =>
-      message.receiverIds.includes(receiverId),
-    );
+  async getMessagesByChatId(chatId: string): Promise<Message[]> {
+    const messages = await this.messageRepository.find({
+      where: { chatId },
+      relations: ['sender'], // Optionally include sender details
+    });
 
     if (messages.length === 0) {
-      throw new NotFoundException(
-        `No messages found for receiver ID ${receiverId}`,
-      );
+      throw new NotFoundException(`No messages found for chat ID ${chatId}.`);
     }
 
     return messages;
   }
 
-  getAllMessages(): Message[] {
-    return Array.from(this.messages.values());
+  async getAllMessages(): Promise<Message[]> {
+    return await this.messageRepository.find({
+      relations: ['sender', 'chat'], // Include sender and chat relations
+    });
   }
 
-  deleteMessage(messageId: string): boolean {
-    const deleted = this.messages.delete(messageId);
-    if (!deleted) {
-      throw new NotFoundException(`Message with ID ${messageId} not found`);
+  async deleteMessage(messageId: string): Promise<boolean> {
+    const result = await this.messageRepository.delete(messageId);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Message with ID ${messageId} not found.`);
     }
     return true;
   }

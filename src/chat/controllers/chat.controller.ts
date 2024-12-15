@@ -34,7 +34,9 @@ export class ChatController {
     type: CreateChatResponse,
   })
   @ApiBody({ type: CreateChatDto })
-  async createChat(@Body() createChatDto: CreateChatDto): Promise<CreateChatResponse> {
+  async createChat(
+    @Body() createChatDto: CreateChatDto,
+  ): Promise<CreateChatResponse> {
     return await this.chatService.createChat(createChatDto.userIds);
   }
 

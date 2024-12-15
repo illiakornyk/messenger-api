@@ -8,8 +8,6 @@ import { Repository } from 'typeorm';
 import { Message } from '../entities/message.entity';
 import { Chat } from '@app/chat/entities/chat.entity';
 import { User } from '@app/user/entities/user.entity';
-import { formatUser } from '@app/common/utils/format-user.util';
-import { CreateMessageResponse } from '@app/messages/interfaces/create-message-response.interface';
 import { IGetMessageResponse } from '../interfaces/get-message-response.interface';
 
 @Injectable()

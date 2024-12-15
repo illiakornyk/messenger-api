@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   if (process.env.IS_PROUCTION) {
-    require('module-alias/register');
+    await import('module-alias/register');
   }
 
   const app = await NestFactory.create(AppModule);

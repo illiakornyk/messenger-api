@@ -45,7 +45,7 @@ export class UserService {
 
     const savedUser = await this.userRepository.save(newUser);
 
-    const { password, ...userWithoutPassword } = savedUser;
+    const { password: _, ...userWithoutPassword } = savedUser;
 
     return userWithoutPassword;
   }
@@ -84,7 +84,7 @@ export class UserService {
 
     const savedUser = await this.userRepository.save(user);
 
-    const { password, ...userWithoutPassword } = savedUser;
+    const { password: _, ...userWithoutPassword } = savedUser;
 
     return userWithoutPassword;
   }

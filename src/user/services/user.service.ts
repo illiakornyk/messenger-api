@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -9,6 +10,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { TUserResponse } from '../types/user-respose.type';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -42,6 +44,45 @@ export class UserService {
     });
 
     const savedUser = await this.userRepository.save(newUser);
+
+    const { password, ...userWithoutPassword } = savedUser;
+
+    return userWithoutPassword;
+  }
+
+  async updateUser(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<TUserResponse> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
+    if (updateUserDto.email || updateUserDto.username) {
+      const existingUser = await this.userRepository.findOne({
+        where: [
+          { email: updateUserDto.email },
+          { username: updateUserDto.username },
+        ],
+      });
+
+      if (existingUser && existingUser.id !== userId) {
+        if (existingUser.email === updateUserDto.email) {
+          throw new BadRequestException(`Email is already in use.`);
+        }
+        if (existingUser.username === updateUserDto.username) {
+          throw new BadRequestException(`Username is already in use.`);
+        }
+      }
+    }
+
+    user.name = updateUserDto.name || user.name;
+    user.username = updateUserDto.username || user.username;
+    user.email = updateUserDto.email || user.email;
+
+    const savedUser = await this.userRepository.save(user);
 
     const { password, ...userWithoutPassword } = savedUser;
 

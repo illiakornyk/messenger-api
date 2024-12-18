@@ -8,6 +8,6 @@ export function formatUser(user: User): {
   return {
     id: user.id,
     name: user.name,
-    username: user.username,
+    username: user.email,
   };
 }

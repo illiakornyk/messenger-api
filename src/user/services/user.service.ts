@@ -19,37 +19,6 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createOne(user: CreateUserDto): Promise<TUserResponse> {
-    const existingUser = await this.userRepository.findOne({
-      where: [{ email: user.email }, { username: user.username }],
-    });
-
-    if (existingUser) {
-      if (existingUser.email === user.email) {
-        throw new ConflictException('Email already exists');
-      }
-      if (existingUser.username === user.username) {
-        throw new ConflictException('Username already exists');
-      }
-    }
-
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
-
-    const newUser = this.userRepository.create({
-      ...user,
-      password: hashedPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    const savedUser = await this.userRepository.save(newUser);
-
-    const { password: _, ...userWithoutPassword } = savedUser;
-
-    return userWithoutPassword;
-  }
-
   async updateUser(
     userId: string,
     updateUserDto: UpdateUserDto,
@@ -64,7 +33,7 @@ export class UserService {
       const existingUser = await this.userRepository.findOne({
         where: [
           { email: updateUserDto.email },
-          { username: updateUserDto.username },
+          { email: updateUserDto.username },
         ],
       });
 
@@ -72,14 +41,14 @@ export class UserService {
         if (existingUser.email === updateUserDto.email) {
           throw new BadRequestException(`Email is already in use.`);
         }
-        if (existingUser.username === updateUserDto.username) {
+        if (existingUser.email === updateUserDto.username) {
           throw new BadRequestException(`Username is already in use.`);
         }
       }
     }
 
     user.name = updateUserDto.name || user.name;
-    user.username = updateUserDto.username || user.username;
+    user.email = updateUserDto.username || user.email;
     user.email = updateUserDto.email || user.email;
 
     const savedUser = await this.userRepository.save(user);

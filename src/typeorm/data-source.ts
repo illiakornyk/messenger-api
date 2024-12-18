@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
   entities: [User, Chat, Message],
   subscribers: [],
   migrations: ['./src/typeorm/migrations/*.ts'],
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  //   ssl: {
+  //     rejectUnauthorized: false,
+  //   },
 });

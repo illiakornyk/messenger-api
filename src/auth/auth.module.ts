@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
 import { AuthController } from './auth.controller';
+import { RefreshTokenStrategy } from '@app/auth/strategies/refreshToken.strategy';
+import { AccessTokenStrategy } from '@app/auth/strategies/accessToken.strategy';
+import { UserService } from '@app/user/services/user.service';
 
 @Module({
   imports: [
@@ -14,9 +14,9 @@ import { AuthController } from './auth.controller';
       secret: 'secretKey',
       signOptions: { expiresIn: '60s' },
     }),
-    TypeOrmModule.forFeature([User]),
+    UserService,
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

@@ -20,7 +20,6 @@ import { UserService } from '@app/user/services/user.service';
 import { TUserResponse } from '../types/user-respose.type';
 import { UserResponse } from '../classes/user-response.class';
 import { UpdateUserDto } from '../dtos/update-user.dto';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -54,7 +53,6 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a user by ID' })
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })

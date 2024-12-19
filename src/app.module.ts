@@ -6,6 +6,10 @@ import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
 import { MessagesModule } from './messages/messages.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from '@app/auth/strategies/jwt.stategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from '@app/auth/guards/jwt.guard';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +23,13 @@ import { AuthModule } from './auth/auth.module';
     ChatModule,
     MessagesModule,
     AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
+    JwtStrategy,
   ],
 })
 export class AppModule {}

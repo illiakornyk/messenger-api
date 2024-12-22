@@ -20,6 +20,7 @@ import { UserService } from '@app/user/services/user.service';
 import { TUserResponse } from '../types/user-respose.type';
 import { UserResponse } from '../classes/user-response.class';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -43,6 +44,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Retrieve all users' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -50,7 +52,7 @@ export class UserController {
     type: () => UserResponse,
   })
   async findAll(): Promise<TUserResponse[]> {
-    return this.userService.findAll();
+    return this.userService.get();
   }
 
   @Get(':id')
@@ -64,7 +66,7 @@ export class UserController {
   async findOne(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<TUserResponse | null> {
-    return this.userService.findOne(id);
+    return this.userService.getOne(id);
   }
 
   @Delete(':id')

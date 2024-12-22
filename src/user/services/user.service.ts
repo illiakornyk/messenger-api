@@ -4,13 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { TUserResponse } from '../types/user-respose.type';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ICreateUser } from '@app/user/interfaces/create-user.interface';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -20,6 +20,7 @@ export class UserService {
   ) {}
 
   async createOne(user: ICreateUser): Promise<TUserResponse> {
+    // Check if user with email or username already exists
     const existingUser = await this.userRepository.findOne({
       where: [{ email: user.email }, { username: user.username }],
     });
@@ -33,15 +34,26 @@ export class UserService {
       }
     }
 
+    // Hash the password
+    const saltRounds = 10; // You can adjust the number of rounds for desired security
+    const hashedPassword = await hash(user.password, saltRounds);
+
+    // Create a new user entity
     const newUser = this.userRepository.create({
       ...user,
+      password: hashedPassword, // Store the hashed password
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    return newUser;
-  }
+    // Save the user to the database
+    const savedUser = await this.userRepository.save(newUser);
 
+    // Exclude password from the returned user object
+    const { password, ...userWithoutPassword } = savedUser;
+
+    return userWithoutPassword;
+  }
   async updateUser(
     userId: string,
     updateUserDto: UpdateUserDto,
@@ -81,13 +93,13 @@ export class UserService {
     return userWithoutPassword;
   }
 
-  async findAll(): Promise<TUserResponse[]> {
+  async get(): Promise<TUserResponse[]> {
     return this.userRepository.find({
       select: ['id', 'name', 'username', 'email', 'createdAt', 'updatedAt'],
     });
   }
 
-  async findOne(id: string): Promise<TUserResponse> {
+  async getOne(id: string): Promise<TUserResponse> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: ['id', 'name', 'username', 'email', 'createdAt', 'updatedAt'],

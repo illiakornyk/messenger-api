@@ -1,5 +1,6 @@
 import { RegisterUserDto } from '@app/auth/dtos/register-user.dto';
 import { TokenPayload } from '@app/auth/interfaces/token-payload.interface';
+import { RefreshTokenService } from '@app/auth/submodules/refresh-token/refresh-token.service';
 import { User } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/services/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { Response } from 'express';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly refreshTokenService: RefreshTokenService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
@@ -21,9 +23,8 @@ export class AuthService {
   }
 
   async login(user: User, response: Response) {
-    const expiresAccessToken = new Date();
-    expiresAccessToken.setMilliseconds(
-      expiresAccessToken.getTime() +
+    const expiresAccessToken = new Date(
+      Date.now() +
         parseInt(
           this.configService.getOrThrow<string>(
             'JWT_ACCESS_TOKEN_EXPIRATION_MS',
@@ -31,9 +32,8 @@ export class AuthService {
         ),
     );
 
-    const expiresRefreshToken = new Date();
-    expiresRefreshToken.setMilliseconds(
-      expiresRefreshToken.getTime() +
+    const expiresRefreshToken = new Date(
+      Date.now() +
         parseInt(
           this.configService.getOrThrow<string>(
             'JWT_REFRESH_TOKEN_EXPIRATION_MS',
@@ -59,6 +59,12 @@ export class AuthService {
       )}ms`,
     });
 
+    await this.refreshTokenService.createOrUpdateRefreshToken(
+      user,
+      refreshToken,
+      expiresRefreshToken,
+    );
+
     response.cookie('Authentication', accessToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
@@ -83,6 +89,24 @@ export class AuthService {
       return user;
     } catch (error) {
       throw new UnauthorizedException('Credential are not valid');
+    }
+  }
+
+  async verifyUserRefreshToken(refreshToken: string, userId: string) {
+    try {
+      const user = await this.userService.getOne(userId);
+
+      const { token: userRefreshToken } =
+        await this.refreshTokenService.getRefreshToken(userId);
+
+      const authenticated = await compare(refreshToken, userRefreshToken);
+      if (!authenticated) {
+        throw new UnauthorizedException();
+      }
+
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException('Refresh token is not valid');
     }
   }
 }

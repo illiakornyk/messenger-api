@@ -14,6 +14,7 @@ import { Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RegisterUserDto } from '@app/auth/dtos/register-user.dto';
 import { LoginUserDto } from '@app/auth/dtos/login-user.dto';
+import { JwtRefreshAuthGuard } from '@app/auth/guards/jwt-refresh-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -21,11 +22,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @ApiOperation({ summary: 'Create a new user' })
+  @ApiOperation({ summary: 'User register' })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: 'The user has been created.',
-    // type: () => UserResponse,
+    description: 'Successfully registered',
   })
   @ApiBody({ type: RegisterUserDto })
   async create(@Body() user: RegisterUserDto) {
@@ -49,5 +49,14 @@ export class AuthController {
     );
     await this.authService.login(user, response);
     return { message: 'Login successful' };
+  }
+
+  @Post('refresh')
+  @UseGuards(JwtRefreshAuthGuard)
+  async refreshToken(
+    @CurrentUser() user: User,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.authService.login(user, response);
   }
 }

@@ -11,6 +11,7 @@ import { TUserResponse } from '../types/user-respose.type';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ICreateUser } from '@app/user/interfaces/create-user.interface';
 import { hash } from 'bcrypt';
+import { USER_CONSTANTS } from '../constants/user.constants';
 
 @Injectable()
 export class UserService {
@@ -20,36 +21,33 @@ export class UserService {
   ) {}
 
   async createOne(user: ICreateUser): Promise<TUserResponse> {
-    // Check if user with email or username already exists
     const existingUser = await this.userRepository.findOne({
       where: [{ email: user.email }, { username: user.username }],
     });
 
     if (existingUser) {
       if (existingUser.email === user.email) {
-        throw new ConflictException('Email already exists');
+        throw new ConflictException(USER_CONSTANTS.ERRORS.EMAIL_ALREADY_EXISTS);
       }
       if (existingUser.username === user.username) {
-        throw new ConflictException('Username already exists');
+        throw new ConflictException(
+          USER_CONSTANTS.ERRORS.USERNAME_ALREADY_EXISTS,
+        );
       }
     }
 
-    // Hash the password
-    const saltRounds = 10; // You can adjust the number of rounds for desired security
+    const saltRounds = 10;
     const hashedPassword = await hash(user.password, saltRounds);
 
-    // Create a new user entity
     const newUser = this.userRepository.create({
       ...user,
-      password: hashedPassword, // Store the hashed password
+      password: hashedPassword,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    // Save the user to the database
     const savedUser = await this.userRepository.save(newUser);
 
-    // Exclude password from the returned user object
     const { password, ...userWithoutPassword } = savedUser;
 
     return userWithoutPassword;
@@ -74,10 +72,14 @@ export class UserService {
 
       if (existingUser && existingUser.id !== userId) {
         if (existingUser.email === updateUserDto.email) {
-          throw new BadRequestException(`Email is already in use.`);
+          throw new BadRequestException(
+            USER_CONSTANTS.ERRORS.EMAIL_ALREADY_EXISTS,
+          );
         }
         if (existingUser.email === updateUserDto.username) {
-          throw new BadRequestException(`Username is already in use.`);
+          throw new BadRequestException(
+            USER_CONSTANTS.ERRORS.USERNAME_ALREADY_EXISTS,
+          );
         }
       }
     }

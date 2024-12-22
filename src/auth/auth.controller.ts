@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from '@app/auth/guards/local-auth.guard';
 import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { User } from '@app/user/entities/user.entity';
 import { Response } from 'express';

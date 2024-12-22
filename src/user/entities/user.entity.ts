@@ -1,3 +1,4 @@
+import { RefreshToken } from '@app/auth/submodules/refresh-token/refresh-token.entity';
 import { Chat } from '@app/chat/entities/chat.entity';
 import { Message } from '@app/messages/entities/message.entity';
 import {
@@ -8,6 +9,7 @@ import {
   UpdateDateColumn,
   ManyToMany,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 
 @Entity({ name: 'user_accounts' })
@@ -32,6 +34,9 @@ export class User {
 
   @OneToMany(() => Message, (message) => message.sender)
   messages: Message[];
+
+  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refreshToken: RefreshToken;
 
   @CreateDateColumn()
   createdAt: Date;

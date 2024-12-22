@@ -31,6 +31,16 @@ export class AuthService {
         ),
     );
 
+    const expiresRefreshToken = new Date();
+    expiresRefreshToken.setMilliseconds(
+      expiresRefreshToken.getTime() +
+        parseInt(
+          this.configService.getOrThrow<string>(
+            'JWT_REFRESH_TOKEN_EXPIRATION_MS',
+          ),
+        ),
+    );
+
     const tokenPayload: TokenPayload = {
       userId: user.id,
     };
@@ -42,10 +52,23 @@ export class AuthService {
       )}ms`,
     });
 
+    const refreshToken = this.jwtService.sign(tokenPayload, {
+      secret: this.configService.getOrThrow('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.getOrThrow(
+        'JWT_REFRESH_TOKEN_EXPIRATION_MS',
+      )}ms`,
+    });
+
     response.cookie('Authentication', accessToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: expiresAccessToken,
+    });
+
+    response.cookie('Refresh', refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: expiresRefreshToken,
     });
   }
 

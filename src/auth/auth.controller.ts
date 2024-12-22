@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpCode,
   HttpStatus,
   Post,
   Res,
@@ -8,19 +9,21 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from '@app/auth/guards/local-auth.guard';
-import { CurrentUser } from '@app/auth/current-user.decorator';
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator';
 import { User } from '@app/user/entities/user.entity';
 import { Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RegisterUserDto } from '@app/auth/dtos/register-user.dto';
 import { LoginUserDto } from '@app/auth/dtos/login-user.dto';
 import { JwtRefreshAuthGuard } from '@app/auth/guards/jwt-refresh-auth.guard';
+import { Public } from './decorators/public.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('register')
   @ApiOperation({ summary: 'User register' })
   @ApiResponse({
@@ -32,10 +35,11 @@ export class AuthController {
     return this.authService.register(user);
   }
 
+  @Public()
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     description: 'Successfully logged in.',
   })
   @ApiBody({ type: LoginUserDto })
@@ -52,6 +56,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshAuthGuard)
   async refreshToken(
     @CurrentUser() user: User,

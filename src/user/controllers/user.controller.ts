@@ -44,7 +44,6 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Retrieve all users' })
   @ApiResponse({
     status: HttpStatus.OK,

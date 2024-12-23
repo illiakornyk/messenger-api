@@ -37,14 +37,18 @@ This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI
 
 The following environment variables are required to configure the application:
 
-| Name                | Required | Default Value | Description                                                                                  |
-| ------------------- | -------- | ------------- | -------------------------------------------------------------------------------------------- |
-| `POSTGRES_USER`     | Yes      | None          | The username for authenticating with the PostgreSQL database.                                |
-| `POSTGRES_PASSWORD` | Yes      | None          | The password for authenticating with the PostgreSQL database.                                |
-| `POSTGRES_DB`       | Yes      | None          | The name of the PostgreSQL database to connect to.                                           |
-| `POSTGRES_PORT`     | Yes      | 5432          | The port number on which the PostgreSQL database is running.                                 |
-| `POSTGRES_HOST`     | Yes      | 'localhost'   | The hostname or IP address of the PostgreSQL database server.                                |
-| `IS_PRODUCTION`     | Yes      | `false`       | Indicates whether the app is running in a production environment. Use `true` for production. |
+| Name                              | Required | Default Value | Description                                                                                  |
+| --------------------------------- | -------- | ------------- | -------------------------------------------------------------------------------------------- |
+| `POSTGRES_USER`                   | Yes      | None          | The username for authenticating with the PostgreSQL database.                                |
+| `POSTGRES_PASSWORD`               | Yes      | None          | The password for authenticating with the PostgreSQL database.                                |
+| `POSTGRES_DB`                     | Yes      | None          | The name of the PostgreSQL database to connect to.                                           |
+| `POSTGRES_PORT`                   | Yes      | 5432          | The port number on which the PostgreSQL database is running.                                 |
+| `POSTGRES_HOST`                   | Yes      | 'localhost'   | The hostname or IP address of the PostgreSQL database server.                                |
+| `IS_PRODUCTION`                   | Yes      | `false`       | Indicates whether the app is running in a production environment. Use `true` for production. |
+| `JWT_ACCESS_TOKEN_SECRET`         | Yes      | None          | The secret key used for signing JWT access tokens.                                           |
+| `JWT_ACCESS_TOKEN_EXPIRATION_MS`  | Yes      | None          | The expiration time for JWT access tokens in milliseconds.                                   |
+| `JWT_REFRESH_TOKEN_SECRET`        | Yes      | None          | The secret key used for signing JWT refresh tokens.                                          |
+| `JWT_REFRESH_TOKEN_EXPIRATION_MS` | Yes      | None          | The expiration time for JWT refresh tokens in milliseconds.                                  |
 
 ### Getting Started
 
@@ -64,6 +68,7 @@ The following environment variables are required to configure the application:
 
    - Add the required environment variables as described in the **Environment Variables** section above.
    - Example `.env`:
+
      ```env
      POSTGRES_USER=your_username
      POSTGRES_PASSWORD=your_password
@@ -71,6 +76,10 @@ The following environment variables are required to configure the application:
      POSTGRES_PORT=5432
      POSTGRES_HOST=localhost
      IS_PRODUCTION=false
+     JWT_ACCESS_TOKEN_SECRET=access_token_secret
+     JWT_ACCESS_TOKEN_EXPIRATION_MS=3600000
+     JWT_REFRESH_TOKEN_SECRET=refresh_token_secret
+     JWT_REFRESH_TOKEN_EXPIRATION_MS=604800000
      ```
 
 4. **Configure the database:**
@@ -86,9 +95,11 @@ The following environment variables are required to configure the application:
 6. **Run database migrations:**
 
    - Apply migrations to set up the database schema:
+
      ```bash
      npm run migration:run
      ```
+
    - Ensure that the migrations complete successfully.
 
 7. **Build the project:**
@@ -145,6 +156,7 @@ For testing and API documentation, Swagger is used. You can find the documentati
 #### Postman
 
 - [Postman flow](https://web.postman.co/workspace/e7b4d90b-5e29-44c8-8228-fb7b46bbfea0/flow/672a73b035ab526e247c29e4)
+- [Postman authentication flow](https://web.postman.co/workspace/My-Workspace~e7b4d90b-5e29-44c8-8228-fb7b46bbfea0/flow/676942cbeaf5ba74950e3efe)
 
 - [Postman collection](./assets/Messenger%20App.postman_collection.json)
 
@@ -168,7 +180,7 @@ These scripts ensure that your database schema stays consistent with the applica
 
 ## Database Structure
 
-![Database diagram](./assets/database_diagram.svg)
+![Database diagram](./assets/database_diagram.png)
 
 ### Tables
 
@@ -196,6 +208,7 @@ These scripts ensure that your database schema stays consistent with the applica
    - **Columns:**
      - `chat_id`: Foreign key referencing `chats.id`.
      - `user_id`: Foreign key referencing `user_accounts.id`.
+     - **Primary Key:** Composite key consisting of `chat_id` and `user_id`.
 
 4. **`messages`:**
 
@@ -207,28 +220,46 @@ These scripts ensure that your database schema stays consistent with the applica
      - `chat_id`: Foreign key referencing `chats.id`, indicating the chat the message belongs to.
      - `createdAt` and `updatedAt`: Timestamps for tracking when the message was sent and updated.
 
-5. **`migrations`:**
+5. **`refresh_tokens`:**
+
+   - Represents the refresh tokens for users to maintain session authentication.
+   - **Columns:**
+     - `id`: Unique identifier for the refresh token.
+     - `token`: Encrypted token for refreshing authentication.
+     - `userId`: Foreign key referencing `user_accounts.id`.
+     - `createdAt` and `updatedAt`: Timestamps for tracking token creation and updates.
+     - `expiresAt`: Expiration date for the refresh token.
+
+6. **`migrations`:**
    - Tracks database schema changes.
    - **Columns:**
      - `id`: Unique identifier for each migration.
      - `timestamp`: Time when the migration was applied.
      - `name`: Description of the migration.
 
-#### Relationships
+---
+
+### Relationships
 
 1. **Users and Chats (`user_accounts` ↔ `chats`):**
 
-   - **Type:** Many-to-Many (via `chat_users`)
+   - **Type:** Many-to-Many (via `chat_users`).
    - **Explanation:** A user can participate in multiple chats, and each chat can include multiple users.
 
 2. **Chats and Messages (`chats` ↔ `messages`):**
 
-   - **Type:** One-to-Many
+   - **Type:** One-to-Many.
    - **Explanation:** Each chat can contain multiple messages, but each message belongs to only one chat.
 
 3. **Users and Messages (`user_accounts` ↔ `messages`):**
-   - **Type:** One-to-Many
+
+   - **Type:** One-to-Many.
    - **Explanation:** A user can send multiple messages, but each message has a single sender.
+
+4. **Users and Refresh Tokens (`user_accounts` ↔ `refresh_tokens`):**
+
+   - **Type:** One-to-One.
+   - **Explanation:** Each user has a single refresh token that can be used to maintain session authentication.
 
 ## Future Improvements
 

@@ -1,0 +1,69 @@
+@startuml
+entity "user_accounts" {
+    + id : UUID <<PK>>
+    --
+    name : VARCHAR
+    username : VARCHAR <<Unique>>
+    email : VARCHAR <<Unique>>
+    password : VARCHAR
+    createdAt : TIMESTAMP
+    updatedAt : TIMESTAMP
+}
+
+entity "chats" {
+    + id : UUID <<PK>>
+    --
+    createdAt : TIMESTAMP
+    updatedAt : TIMESTAMP
+}
+
+entity "chat_users" {
+    + chat_id : UUID <<FK>>
+    + user_id : UUID <<FK>>
+    --
+    PRIMARY KEY (chat_id, user_id)
+}
+
+entity "messages" {
+    + id : UUID <<PK>>
+    --
+    content : TEXT
+    createdAt : TIMESTAMP
+    updatedAt : TIMESTAMP
+    sender_id : UUID <<FK>>
+    chat_id : UUID <<FK>>
+}
+
+entity "refresh_tokens" {
+    + id : UUID <<PK>>
+    --
+    token : TEXT
+    createdAt : TIMESTAMP
+    updatedAt : TIMESTAMP
+    expiresAt : TIMESTAMP
+    userId : UUID <<FK>>
+}
+
+entity "migrations" {
+    + id : UUID <<PK>>
+    --
+    timestamp : TIMESTAMP
+    name : VARCHAR
+}
+
+'user_accounts relationships
+user_accounts ||--o{ chat_users : "has"
+user_accounts ||--o{ messages : "sends"
+user_accounts ||--o{ refresh_tokens : "owns"
+
+'chats relationships
+chats ||--o{ chat_users : "contains"
+chats ||--o{ messages : "includes"
+
+'Foreign key relationships
+chat_users }o--|| chats : "chat_id"
+chat_users }o--|| user_accounts : "user_id"
+messages }o--|| user_accounts : "sender_id"
+messages }o--|| chats : "chat_id"
+refresh_tokens }o--|| user_accounts : "userId"
+@enduml

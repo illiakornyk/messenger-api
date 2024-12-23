@@ -1,959 +1,1326 @@
 {
-  "info": {
-    "_postman_id": "def6cb4f-618f-417d-8f71-49741ffaec95",
-    "name": "Messenger App",
-    "description": "A simple messenger application API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "12089576"
-  },
-  "item": [
-    {
-      "name": "/",
-      "item": [
-        {
-          "name": "App Controller get Hello",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{production}}/",
-              "host": ["{{production}}"],
-              "path": [""]
-            }
-          },
-          "response": [
-            {
-              "name": "Untitled Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/",
-                  "host": ["{{baseUrl}}"],
-                  "path": [""]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "text",
-              "header": [],
-              "cookie": [],
-              "body": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "healthcheck",
-      "item": [
-        {
-          "name": "Healthcheck Controller health Check",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/healthcheck",
-              "host": ["{{baseUrl}}"],
-              "path": ["healthcheck"]
-            }
-          },
-          "response": [
-            {
-              "name": "Service is healthy",
-              "originalRequest": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/healthcheck",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["healthcheck"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"status\": \"UP\",\n  \"date\": \"<string>\"\n}"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "users",
-      "item": [
-        {
-          "name": "{id}",
-          "item": [
-            {
-              "name": "Update user information",
-              "request": {
-                "method": "PATCH",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\"\n}",
-                  "options": {
-                    "raw": {
-                      "headerFamily": "json",
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{production}}/users/:id",
-                  "host": ["{{production}}"],
-                  "path": ["users", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<string>",
-                      "description": "(Required) UUID of the user"
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "The updated user information.",
-                  "originalRequest": {
-                    "method": "PATCH",
-                    "header": [
-                      {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                      },
-                      {
-                        "key": "Accept",
-                        "value": "application/json"
-                      }
-                    ],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\"\n}",
-                      "options": {
-                        "raw": {
-                          "headerFamily": "json",
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{baseUrl}}/users/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "header": [
-                    {
-                      "key": "Content-Type",
-                      "value": "application/json"
-                    }
-                  ],
-                  "cookie": [],
-                  "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
-                }
-              ]
-            },
-            {
-              "name": "Retrieve a user by ID",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{production}}/users/:id",
-                  "host": ["{{production}}"],
-                  "path": ["users", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<uuid>",
-                      "description": "(Required) "
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "The found user",
-                  "originalRequest": {
-                    "method": "GET",
-                    "header": [
-                      {
-                        "key": "Accept",
-                        "value": "application/json"
-                      }
-                    ],
-                    "url": {
-                      "raw": "{{baseUrl}}/users/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "header": [
-                    {
-                      "key": "Content-Type",
-                      "value": "application/json"
-                    }
-                  ],
-                  "cookie": [],
-                  "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
-                }
-              ]
-            },
-            {
-              "name": "Delete a user by ID",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{production}}/users/:id",
-                  "host": ["{{production}}"],
-                  "path": ["users", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<uuid>",
-                      "description": "(Required) "
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "User has been deleted",
-                  "originalRequest": {
-                    "method": "DELETE",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/users/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Create a new user",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<string>\",\n  \"password\": \"<string>\"\n}",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{production}}/users",
-              "host": ["{{production}}"],
-              "path": ["users"]
-            }
-          },
-          "response": [
-            {
-              "name": "The user has been created.",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<string>\",\n  \"password\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "headerFamily": "json",
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/users",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Retrieve all users",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{production}}/users",
-              "host": ["{{production}}"],
-              "path": ["users"]
-            }
-          },
-          "response": [
-            {
-              "name": "List of users",
-              "originalRequest": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/users",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "chats",
-      "item": [
-        {
-          "name": "{id}",
-          "item": [
-            {
-              "name": "Retrieve a chat by ID",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{production}}/chats/:id",
-                  "host": ["{{production}}"],
-                  "path": ["chats", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<string>",
-                      "description": "(Required) UUID of the chat"
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "The found chat",
-                  "originalRequest": {
-                    "method": "GET",
-                    "header": [
-                      {
-                        "key": "Accept",
-                        "value": "application/json"
-                      }
-                    ],
-                    "url": {
-                      "raw": "{{baseUrl}}/chats/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["chats", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "header": [
-                    {
-                      "key": "Content-Type",
-                      "value": "application/json"
-                    }
-                  ],
-                  "cookie": [],
-                  "body": "{}"
-                }
-              ]
-            },
-            {
-              "name": "Delete a chat by ID",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{production}}/chats/:id",
-                  "host": ["{{production}}"],
-                  "path": ["chats", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<string>",
-                      "description": "(Required) UUID of the chat"
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "Chat has been deleted",
-                  "originalRequest": {
-                    "method": "DELETE",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/chats/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["chats", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "No Content",
-                  "code": 204,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Create a new chat",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"userIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{production}}/chats",
-              "host": ["{{production}}"],
-              "path": ["chats"]
-            }
-          },
-          "response": [
-            {
-              "name": "The chat has been created.",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"userIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "headerFamily": "json",
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/chats",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["chats"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"id\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\",\n  \"users\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"username\": \"<string>\",\n      \"email\": \"<email>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"username\": \"<string>\",\n      \"email\": \"<email>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
-            }
-          ]
-        },
-        {
-          "name": "Retrieve all chats or find by user ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{production}}/chats?userId=<string>",
-              "host": ["{{production}}"],
-              "path": ["chats"],
-              "query": [
-                {
-                  "key": "userId",
-                  "value": "<string>",
-                  "description": "UUID of the user"
-                }
-              ]
-            }
-          },
-          "response": [
-            {
-              "name": "Chat(s) retrieved successfully",
-              "originalRequest": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/chats?userId=<string>",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["chats"],
-                  "query": [
-                    {
-                      "key": "userId",
-                      "value": "<string>",
-                      "description": "UUID of the user"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "[]"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "messages",
-      "item": [
-        {
-          "name": "{id}",
-          "item": [
-            {
-              "name": "Retrieve a message by ID",
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{production}}/messages/:id",
-                  "host": ["{{production}}"],
-                  "path": ["messages", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<string>",
-                      "description": "(Required) UUID of the message"
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "The found message",
-                  "originalRequest": {
-                    "method": "GET",
-                    "header": [
-                      {
-                        "key": "Accept",
-                        "value": "application/json"
-                      }
-                    ],
-                    "url": {
-                      "raw": "{{baseUrl}}/messages/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["messages", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "header": [
-                    {
-                      "key": "Content-Type",
-                      "value": "application/json"
-                    }
-                  ],
-                  "cookie": [],
-                  "body": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
-                }
-              ]
-            },
-            {
-              "name": "Delete a message by ID",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{production}}/messages/:id",
-                  "host": ["{{production}}"],
-                  "path": ["messages", ":id"],
-                  "variable": [
-                    {
-                      "key": "id",
-                      "value": "<string>",
-                      "description": "(Required) UUID of the message"
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "Message has been deleted",
-                  "originalRequest": {
-                    "method": "DELETE",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseUrl}}/messages/:id",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["messages", ":id"],
-                      "variable": [
-                        {
-                          "key": "id"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "text",
-                  "header": [],
-                  "cookie": [],
-                  "body": ""
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Create a new message",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{production}}/messages",
-              "host": ["{{production}}"],
-              "path": ["messages"]
-            }
-          },
-          "response": [
-            {
-              "name": "The message has been created.",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
-                  "options": {
-                    "raw": {
-                      "headerFamily": "json",
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/messages",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["messages"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Retrieve all messages or filter by sender or receiver",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{production}}/messages?senderId=<string>&receiverId=<string>",
-              "host": ["{{production}}"],
-              "path": ["messages"],
-              "query": [
-                {
-                  "key": "senderId",
-                  "value": "<string>",
-                  "description": "UUID of the sender"
-                },
-                {
-                  "key": "receiverId",
-                  "value": "<string>",
-                  "description": "UUID of a receiver"
-                }
-              ]
-            }
-          },
-          "response": [
-            {
-              "name": "List of messages or filtered messages",
-              "originalRequest": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "url": {
-                  "raw": "{{baseUrl}}/messages?senderId=<string>&receiverId=<string>",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["messages"],
-                  "query": [
-                    {
-                      "key": "senderId",
-                      "value": "<string>",
-                      "description": "UUID of the sender"
-                    },
-                    {
-                      "key": "receiverId",
-                      "value": "<string>",
-                      "description": "UUID of a receiver"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"senderId\": \"<uuid>\",\n    \"receiverIds\": [\n      \"<uuid>\",\n      \"<uuid>\"\n    ],\n    \"content\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"senderId\": \"<uuid>\",\n    \"receiverIds\": [\n      \"<uuid>\",\n      \"<uuid>\"\n    ],\n    \"content\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n]"
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "packages": {},
-        "exec": [""]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "packages": {},
-        "exec": [""]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "domain",
-      "value": "http://localhost:3000"
-    },
-    {
-      "key": "production",
-      "value": "https://messenger-api-2930.onrender.com/",
-      "type": "string"
-    }
-  ]
+	"info": {
+		"_postman_id": "def6cb4f-618f-417d-8f71-49741ffaec95",
+		"name": "Messenger App",
+		"description": "A simple messenger application API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12089576"
+	},
+	"item": [
+		{
+			"name": "/",
+			"item": [
+				{
+					"name": "App Controller get Hello",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{production}}/",
+							"host": [
+								"{{production}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "healthcheck",
+			"item": [
+				{
+					"name": "Healthcheck Controller health Check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/healthcheck",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"healthcheck"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Service is healthy",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/healthcheck",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"healthcheck"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": \"UP\",\n  \"date\": \"<string>\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Update user information",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{production}}/users/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) UUID of the user"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The updated user information.",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Retrieve a user by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{production}}/users/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<uuid>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The found user",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete a user by ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{production}}/users/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<uuid>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "User has been deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/users/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Retrieve all users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{production}}/users",
+							"host": [
+								"{{production}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List of users",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "chats",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Retrieve a chat by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{production}}/chats/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"chats",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) UUID of the chat"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The found chat",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/chats/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"chats",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "Delete a chat by ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{production}}/chats/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"chats",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) UUID of the chat"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Chat has been deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/chats/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"chats",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create a new chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{production}}/chats",
+							"host": [
+								"{{production}}"
+							],
+							"path": [
+								"chats"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "The chat has been created.",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/chats",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chats"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\",\n  \"users\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"username\": \"<string>\",\n      \"email\": \"<email>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"username\": \"<string>\",\n      \"email\": \"<email>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Retrieve all chats or find by user ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{production}}/chats?userId=<string>",
+							"host": [
+								"{{production}}"
+							],
+							"path": [
+								"chats"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "<string>",
+									"description": "UUID of the user"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Chat(s) retrieved successfully",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/chats?userId=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chats"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "<string>",
+											"description": "UUID of the user"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "messages",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Retrieve a message by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{production}}/messages/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"messages",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) UUID of the message"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The found message",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/messages/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete a message by ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{production}}/messages/:id",
+									"host": [
+										"{{production}}"
+									],
+									"path": [
+										"messages",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) UUID of the message"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Message has been deleted",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/messages/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"messages",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create a new message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{production}}/messages",
+							"host": [
+								"{{production}}"
+							],
+							"path": [
+								"messages"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "The message has been created.",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/messages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"<uuid>\",\n  \"senderId\": \"<uuid>\",\n  \"receiverIds\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"content\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Retrieve all messages or filter by sender or receiver",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{production}}/messages?senderId=<string>&receiverId=<string>",
+							"host": [
+								"{{production}}"
+							],
+							"path": [
+								"messages"
+							],
+							"query": [
+								{
+									"key": "senderId",
+									"value": "<string>",
+									"description": "UUID of the sender"
+								},
+								{
+									"key": "receiverId",
+									"value": "<string>",
+									"description": "UUID of a receiver"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List of messages or filtered messages",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/messages?senderId=<string>&receiverId=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"messages"
+									],
+									"query": [
+										{
+											"key": "senderId",
+											"value": "<string>",
+											"description": "UUID of the sender"
+										},
+										{
+											"key": "receiverId",
+											"value": "<string>",
+											"description": "UUID of a receiver"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"senderId\": \"<uuid>\",\n    \"receiverIds\": [\n      \"<uuid>\",\n      \"<uuid>\"\n    ],\n    \"content\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"senderId\": \"<uuid>\",\n    \"receiverIds\": [\n      \"<uuid>\",\n      \"<uuid>\"\n    ],\n    \"content\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register a user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{name}}\",\n  \"username\": \"{{username}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/auth/register",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register a user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"username\": \"john_doe123\",\n  \"email\": \"johndoe@mail.com\",\n  \"password\": \"qwerty\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain}}/auth/register",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Dec 2024 11:07:04 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Login a user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/auth/login",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login a user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"johndoe@mail.com\",\n  \"password\": \"qwerty\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain}}/auth/login",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "Authentication=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzZWUzY2RjMi1iNDY3LTQxNTctYWZjZS1lNzBjOWE0ZTUyZjIiLCJpYXQiOjE3MzQ5NTIwNDcsImV4cCI6MTczNDk1NTY0N30.By_yYTV3K_Qigdw_QXu8hpe08I_Lvfl4Md5UK1iyLD0; Path=/; Expires=Mon, 23 Dec 2024 12:07:27 GMT; HttpOnly"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "Refresh=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzZWUzY2RjMi1iNDY3LTQxNTctYWZjZS1lNzBjOWE0ZTUyZjIiLCJpYXQiOjE3MzQ5NTIwNDcsImV4cCI6MTczNTU1Njg0N30.aATg34yWi0pPI4YIAfHCbUv-KV-efrPvvXwS4x4YYRQ; Path=/; Expires=Mon, 30 Dec 2024 11:07:27 GMT; HttpOnly"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "30"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1e-DOWvfMhj05v4eN+mg6AlHJrIPp8\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Dec 2024 11:07:27 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Login successful\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/auth/refresh",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Refresh token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/auth/refresh",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "Authentication=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzZWUzY2RjMi1iNDY3LTQxNTctYWZjZS1lNzBjOWE0ZTUyZjIiLCJpYXQiOjE3MzQ5NTIwNjAsImV4cCI6MTczNDk1NTY2MH0.h1nm4adbyT2Sp0FTFKXN9Y-EuZUzcCRBDkkKw2S7DXo; Path=/; Expires=Mon, 23 Dec 2024 12:07:40 GMT; HttpOnly"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "Refresh=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzZWUzY2RjMi1iNDY3LTQxNTctYWZjZS1lNzBjOWE0ZTUyZjIiLCJpYXQiOjE3MzQ5NTIwNjAsImV4cCI6MTczNTU1Njg2MH0.FxzEqTPx9O-HHsVHafh9rUkvQJ8kWmKVIaXgemu_yc0; Path=/; Expires=Mon, 30 Dec 2024 11:07:40 GMT; HttpOnly"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Dec 2024 11:07:41 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "production",
+			"value": "https://messenger-api-2930.onrender.com/",
+			"type": "string"
+		}
+	]
 }

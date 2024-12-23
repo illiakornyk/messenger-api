@@ -7,7 +7,6 @@ import {
   ParseUUIDPipe,
   HttpStatus,
   Patch,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,7 +19,6 @@ import { UserService } from '@app/user/services/user.service';
 import { TUserResponse } from '../types/user-respose.type';
 import { UserResponse } from '../classes/user-response.class';
 import { UpdateUserDto } from '../dtos/update-user.dto';
-import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')

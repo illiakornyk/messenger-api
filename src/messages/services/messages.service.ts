@@ -58,15 +58,6 @@ export class MessagesService {
 
     const savedMessage = await this.messageRepository.save(newMessage);
 
-    // return {
-    //   id: savedMessage.id,
-    //   content: savedMessage.content,
-    //   chatId: savedMessage.chat.id,
-    //   createdAt: savedMessage.createdAt,
-    //   updatedAt: savedMessage.updatedAt,
-    //   sender: formatUser(sender),
-    // };
-
     return this.formatMessageResponse(savedMessage);
   }
 

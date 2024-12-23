@@ -5,6 +5,7 @@ import { User } from '../user/entities/user.entity';
 import { Chat } from '@app/chat/entities/chat.entity';
 import { Message } from '@app/messages/entities/message.entity';
 import { RefreshToken } from '@app/auth/submodules/refresh-token/refresh-token.entity';
+import { getDatabaseSslConfig } from '@app/common/utils/database-utils';
 
 @Module({
   imports: [
@@ -20,9 +21,7 @@ import { RefreshToken } from '@app/auth/submodules/refresh-token/refresh-token.e
         database: configService.get<string>('POSTGRES_DB'),
         entities: [User, Chat, Message, RefreshToken],
         synchronize: false,
-        // ssl: {
-        //   rejectUnauthorized: false,
-        // },
+        ssl: getDatabaseSslConfig(),
       }),
     }),
   ],

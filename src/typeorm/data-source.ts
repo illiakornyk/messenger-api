@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { Chat } from '@app/chat/entities/chat.entity';
 import { Message } from '@app/messages/entities/message.entity';
 import { RefreshToken } from '@app/auth/submodules/refresh-token/refresh-token.entity';
+import { getDatabaseSslConfig } from '@app/common/utils/database-utils';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -17,7 +18,5 @@ export const AppDataSource = new DataSource({
   entities: [User, Chat, Message, RefreshToken],
   subscribers: [],
   migrations: ['./src/typeorm/migrations/*.ts'],
-  //   ssl: {
-  //     rejectUnauthorized: false,
-  //   },
+  ssl: getDatabaseSslConfig(),
 });

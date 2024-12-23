@@ -37,18 +37,20 @@ This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI
 
 The following environment variables are required to configure the application:
 
-| Name                              | Required | Default Value | Description                                                                                  |
-| --------------------------------- | -------- | ------------- | -------------------------------------------------------------------------------------------- |
-| `POSTGRES_USER`                   | Yes      | None          | The username for authenticating with the PostgreSQL database.                                |
-| `POSTGRES_PASSWORD`               | Yes      | None          | The password for authenticating with the PostgreSQL database.                                |
-| `POSTGRES_DB`                     | Yes      | None          | The name of the PostgreSQL database to connect to.                                           |
-| `POSTGRES_PORT`                   | Yes      | 5432          | The port number on which the PostgreSQL database is running.                                 |
-| `POSTGRES_HOST`                   | Yes      | 'localhost'   | The hostname or IP address of the PostgreSQL database server.                                |
-| `IS_PRODUCTION`                   | Yes      | `false`       | Indicates whether the app is running in a production environment. Use `true` for production. |
-| `JWT_ACCESS_TOKEN_SECRET`         | Yes      | None          | The secret key used for signing JWT access tokens.                                           |
-| `JWT_ACCESS_TOKEN_EXPIRATION_MS`  | Yes      | None          | The expiration time for JWT access tokens in milliseconds.                                   |
-| `JWT_REFRESH_TOKEN_SECRET`        | Yes      | None          | The secret key used for signing JWT refresh tokens.                                          |
-| `JWT_REFRESH_TOKEN_EXPIRATION_MS` | Yes      | None          | The expiration time for JWT refresh tokens in milliseconds.                                  |
+| Name                              | Required | Default Value | Description                                                                                                             |
+| --------------------------------- | -------- | ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `POSTGRES_USER`                   | Yes      | None          | The username for authenticating with the PostgreSQL database.                                                           |
+| `POSTGRES_PASSWORD`               | Yes      | None          | The password for authenticating with the PostgreSQL database.                                                           |
+| `POSTGRES_DB`                     | Yes      | None          | The name of the PostgreSQL database to connect to.                                                                      |
+| `POSTGRES_PORT`                   | Yes      | 5432          | The port number on which the PostgreSQL database is running.                                                            |
+| `POSTGRES_HOST`                   | Yes      | 'localhost'   | The hostname or IP address of the PostgreSQL database server.                                                           |
+| `IS_PRODUCTION`                   | Yes      | `false`       | Indicates whether the app is running in a production environment. Use `true` for production.                            |
+| `JWT_ACCESS_TOKEN_SECRET`         | Yes      | None          | The secret key used for signing JWT access tokens.                                                                      |
+| `JWT_ACCESS_TOKEN_EXPIRATION_MS`  | Yes      | None          | The expiration time for JWT access tokens in milliseconds.                                                              |
+| `JWT_REFRESH_TOKEN_SECRET`        | Yes      | None          | The secret key used for signing JWT refresh tokens.                                                                     |
+| `JWT_REFRESH_TOKEN_EXPIRATION_MS` | Yes      | None          | The expiration time for JWT refresh tokens in milliseconds.                                                             |
+| `DB_ENABLE_SSL`                   | Yes      | `false`       | Indicates whether SSL is enabled for the database connection. Required for external deployed databases.                 |
+| `DB_SSL_REJECT_UNAUTHORIZED`      | Yes      | `false`       | Determines whether the SSL certificate should be verified. Typically used with external databases where SSL is enabled. |
 
 ### Getting Started
 
@@ -80,6 +82,8 @@ The following environment variables are required to configure the application:
      JWT_ACCESS_TOKEN_EXPIRATION_MS=3600000
      JWT_REFRESH_TOKEN_SECRET=refresh_token_secret
      JWT_REFRESH_TOKEN_EXPIRATION_MS=604800000
+     DB_ENABLE_SSL=false
+     DB_SSL_REJECT_UNAUTHORIZED=false
      ```
 
 4. **Configure the database:**

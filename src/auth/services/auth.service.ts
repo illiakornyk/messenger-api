@@ -87,7 +87,7 @@ export class AuthService {
         throw new UnauthorizedException();
       }
       return user;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Credentials are not valid');
     }
   }
@@ -105,7 +105,7 @@ export class AuthService {
       }
 
       return user;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Refresh token is not valid');
     }
   }

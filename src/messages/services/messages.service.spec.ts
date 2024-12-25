@@ -5,7 +5,7 @@ import { User } from '@app/user/entities/user.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -266,6 +266,83 @@ describe('MessagesService', () => {
       jest.spyOn(messageRepository, 'find').mockResolvedValue([]);
 
       await expect(service.getMessagesByChatId(chatId)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('getAllMessages', () => {
+    it('should return all messages successfully', async () => {
+      const sender = { id: 'user-1' } as User;
+      const chat = { id: 'chat-1' } as Chat;
+      const messages = [
+        {
+          id: 'message-1',
+          sender,
+          chat,
+          content: 'Hello',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'message-2',
+          sender,
+          chat,
+          content: 'Hi',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ] as Message[];
+
+      jest.spyOn(messageRepository, 'find').mockResolvedValue(messages);
+
+      const result = await service.getAllMessages();
+      expect(result).toEqual([
+        {
+          id: 'message-1',
+          senderId: 'user-1',
+          chatId: 'chat-1',
+          content: 'Hello',
+          createdAt: messages[0].createdAt,
+          updatedAt: messages[0].updatedAt,
+        },
+        {
+          id: 'message-2',
+          senderId: 'user-1',
+          chatId: 'chat-1',
+          content: 'Hi',
+          createdAt: messages[1].createdAt,
+          updatedAt: messages[1].updatedAt,
+        },
+      ]);
+    });
+  });
+
+  describe('deleteMessage', () => {
+    const mockDeleteResult = (affected: number): DeleteResult => ({
+      raw: {},
+      affected,
+    });
+
+    it('should delete a message successfully', async () => {
+      const messageId = 'message-1';
+
+      jest
+        .spyOn(messageRepository, 'delete')
+        .mockResolvedValue(mockDeleteResult(1));
+
+      const result = await service.deleteMessage(messageId);
+      expect(result).toBe(true);
+    });
+
+    it('should throw NotFoundException if message not found', async () => {
+      const messageId = 'message-1';
+
+      jest
+        .spyOn(messageRepository, 'delete')
+        .mockResolvedValue(mockDeleteResult(0));
+
+      await expect(service.deleteMessage(messageId)).rejects.toThrow(
         NotFoundException,
       );
     });

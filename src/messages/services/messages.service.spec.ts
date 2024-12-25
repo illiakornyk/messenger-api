@@ -2,7 +2,7 @@ import { Chat } from '@app/chat/entities/chat.entity';
 import { Message } from '@app/messages/entities/message.entity';
 import { MessagesService } from '@app/messages/services/messages.service';
 import { User } from '@app/user/entities/user.entity';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -114,6 +114,44 @@ describe('MessagesService', () => {
       await expect(
         service.createMessage(senderId, chatId, content),
       ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('getMessageById', () => {
+    it('should return a message successfully', async () => {
+      const messageId = 'message-1';
+      const sender = { id: 'user-1' } as User;
+      const chat = { id: 'chat-1' } as Chat;
+      const message = {
+        id: messageId,
+        sender,
+        chat,
+        content: 'Hello',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as Message;
+
+      jest.spyOn(messageRepository, 'findOne').mockResolvedValue(message);
+
+      const result = await service.getMessageById(messageId);
+      expect(result).toEqual({
+        id: messageId,
+        senderId: 'user-1',
+        chatId: 'chat-1',
+        content: 'Hello',
+        createdAt: message.createdAt,
+        updatedAt: message.updatedAt,
+      });
+    });
+
+    it('should throw NotFoundException if message not found', async () => {
+      const messageId = 'message-1';
+
+      jest.spyOn(messageRepository, 'findOne').mockResolvedValue(null);
+
+      await expect(service.getMessageById(messageId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

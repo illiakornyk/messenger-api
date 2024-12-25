@@ -154,4 +154,120 @@ describe('MessagesService', () => {
       );
     });
   });
+
+  describe('getMessagesBySenderId', () => {
+    it('should return messages successfully', async () => {
+      const senderId = 'user-1';
+      const sender = { id: senderId } as User;
+      const chat = { id: 'chat-1' } as Chat;
+      const messages = [
+        {
+          id: 'message-1',
+          sender,
+          chat,
+          content: 'Hello',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'message-2',
+          sender,
+          chat,
+          content: 'Hi',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ] as Message[];
+
+      jest.spyOn(messageRepository, 'find').mockResolvedValue(messages);
+
+      const result = await service.getMessagesBySenderId(senderId);
+      expect(result).toEqual([
+        {
+          id: 'message-1',
+          senderId: senderId,
+          chatId: 'chat-1',
+          content: 'Hello',
+          createdAt: messages[0].createdAt,
+          updatedAt: messages[0].updatedAt,
+        },
+        {
+          id: 'message-2',
+          senderId: senderId,
+          chatId: 'chat-1',
+          content: 'Hi',
+          createdAt: messages[1].createdAt,
+          updatedAt: messages[1].updatedAt,
+        },
+      ]);
+    });
+
+    it('should throw NotFoundException if no messages found', async () => {
+      const senderId = 'user-1';
+
+      jest.spyOn(messageRepository, 'find').mockResolvedValue([]);
+
+      await expect(service.getMessagesBySenderId(senderId)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('getMessagesByChatId', () => {
+    it('should return messages successfully', async () => {
+      const chatId = 'chat-1';
+      const sender = { id: 'user-1' } as User;
+      const chat = { id: chatId } as Chat;
+      const messages = [
+        {
+          id: 'message-1',
+          sender,
+          chat,
+          content: 'Hello',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'message-2',
+          sender,
+          chat,
+          content: 'Hi',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ] as Message[];
+
+      jest.spyOn(messageRepository, 'find').mockResolvedValue(messages);
+
+      const result = await service.getMessagesByChatId(chatId);
+      expect(result).toEqual([
+        {
+          id: 'message-1',
+          senderId: 'user-1',
+          chatId: chatId,
+          content: 'Hello',
+          createdAt: messages[0].createdAt,
+          updatedAt: messages[0].updatedAt,
+        },
+        {
+          id: 'message-2',
+          senderId: 'user-1',
+          chatId: chatId,
+          content: 'Hi',
+          createdAt: messages[1].createdAt,
+          updatedAt: messages[1].updatedAt,
+        },
+      ]);
+    });
+
+    it('should throw NotFoundException if no messages found', async () => {
+      const chatId = 'chat-1';
+
+      jest.spyOn(messageRepository, 'find').mockResolvedValue([]);
+
+      await expect(service.getMessagesByChatId(chatId)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
 });

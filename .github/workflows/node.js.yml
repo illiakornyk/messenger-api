@@ -31,11 +31,11 @@ jobs:
 
       # Step 4: Check code formatting with Prettier
       - name: Check Code Formatting
-        run: npx prettier --check .
+        run: npm run format:check
 
       # Step 5: Lint the code with ESLint
       - name: Run ESLint
-        run: npx eslint . --ext .ts
+        run: npm run lint:check
 
       # Step 6: Build the project
       - name: Build

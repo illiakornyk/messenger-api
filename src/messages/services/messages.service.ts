@@ -114,6 +114,7 @@ export class MessagesService {
 
   async deleteMessage(messageId: string): Promise<boolean> {
     const result = await this.messageRepository.delete(messageId);
+
     if (result.affected === 0) {
       throw new NotFoundException(`Message with ID ${messageId} not found.`);
     }

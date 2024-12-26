@@ -8,6 +8,10 @@ This project is a simple messenger application, similar to Telegram, that allows
 
 This project was developed by Illia Kornyk, a student of group IM-24 at NTUU KPI.
 
+## Report for laboratory tasks
+
+[Звіт до лабораторних робіт](https://docs.google.com/document/d/1arizDLe53Vias724hYhUuZtRrXoWFCQkYFieQLy5dEs/edit?usp=sharing)
+
 ## Features
 
 - User registration and authentication
@@ -169,6 +173,19 @@ For testing and API documentation, Swagger is used. You can find the documentati
 - Register: Users can create an account using their nickname.
 - Find Users: Search for users by their nickname.
 - Messaging: Send and receive messages in real time.
+
+## Components diagram
+
+![ Components diagram](./assets/component_diagram.svg)
+
+- Auth: Manages JWT-based authentication, checks user credentials (via User), and stores tokens in Database. Uses Common for shared utilities.
+- User: Handles user data (name, email, etc.), persisting to Database.
+- Chat: Creates and manages chat entities, requires user references (via User) and saves everything in Database. Also uses Common for utilities.
+- Messages: Manages message creation and retrieval, referencing both User (as sender) and Chat (to which the message belongs). Data is stored in Database. May use Common for utility functions.
+- Database: Configures the database connection (PostgreSQL or similar) using TypeORM, responsible for entity and repository setup.
+- TypeORM: Specifically manages migrations and low-level database operations.
+- Common: A place for shared utilities or helpers that can be used by any module (e.g., logging, error handling).
+- Healthcheck: Offers a simple route or service to check if the application and database are running properly.
 
 ### **Database Migrations**
 

@@ -1,0 +1,46 @@
+@startuml
+!theme blueprint
+
+title Messenger Application - Module Structure
+
+' Components (Modules)
+[Auth] as Auth
+[User] as User
+[Messages] as Messages
+[Chat] as Chat
+[Database] as Database
+[TypeORM] as TypeOrm
+[Common] as Common
+[Healthcheck] as Healthcheck
+
+' Auth handles JWT authentication, uses User for verifying credentials.
+Auth --> User : checks user credentials
+Auth --> Database : stores/validates tokens
+
+' Chat manages chat creation and participants. Relies on user data.
+Chat --> User : checks participants
+Chat --> Database : persists chat data
+
+' Messages module handles sending and fetching messages in a chat.
+Messages --> User : identifies sender
+Messages --> Chat : ensures message belongs to a chat
+Messages --> Database : stores message data
+
+' User module manages user data and interactions.
+User --> Database : reads/writes user info
+
+' Database module configures TypeORM connection.
+Database --> TypeOrm : migrations, repository handling
+
+' Healthcheck provides a route to verify app status.
+Healthcheck -.-> Database : optional check
+
+
+' Show that everything references Common as needed.
+Auth -.-> Common : optional
+Chat -.-> Common : optional
+Messages -.-> Common : optional
+User -.-> Common : optional
+Healthcheck -.-> Common : optional
+
+@enduml

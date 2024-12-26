@@ -1,0 +1,78 @@
+@startuml
+actor User
+participant Auth
+participant MessagesService
+participant Database
+
+User -> Auth: Authenticate with JWT
+Auth -> User: Verify JWT
+User -> MessagesService: Send message (content, chat_id)
+MessagesService -> Database: Check if user is in chat
+Database --> MessagesService: User found in chat
+MessagesService -> Database: Save message to "messages" table
+MessagesService -> User: Return success response
+@enduml
+
+
+
+# Auth
+@startuml
+actor User
+participant Auth
+participant UserService
+participant Database
+
+== Registration ==
+User -> Auth: Register (name, email, password)
+Auth -> UserService: Validate and hash password
+UserService -> Database: Save user details
+Database --> UserService: User saved
+UserService --> Auth: Registration successful
+Auth --> User: Registration successful response
+
+== Login ==
+User -> Auth: Login (email, password)
+Auth -> UserService: Fetch user by email
+UserService -> Database: Query user
+Database --> UserService: User details
+UserService -> Auth: Validate password
+Auth -> User: Return JWT + Refresh Token
+
+== Token Refresh ==
+User -> Auth: Refresh token (old refresh token)
+Auth -> Database: Validate refresh token
+Auth -> Auth: Generate new JWT + Refresh Token
+Auth -> Database: Store new refresh token
+Auth --> User: Return new JWT + Refresh Token
+@enduml
+
+
+# Chat and Messages
+
+@startuml
+actor User
+participant ChatService
+participant UserService
+participant Database
+participant MessageService
+
+== Creating a Chat ==
+User -> ChatService: Create Chat (userIds)
+ChatService -> UserService: Validate userIds
+UserService -> Database: Check if users exist
+Database --> UserService: User validation result
+UserService --> ChatService: Validation successful
+ChatService -> Database: Save chat with participants
+Database --> ChatService: Chat saved
+ChatService --> User: Chat created response
+
+== Sending a Message ==
+User -> MessageService: Send message (senderId, chatId, content)
+MessageService -> ChatService: Validate chatId and senderId
+ChatService -> Database: Check if chat exists and user is a participant
+Database --> ChatService: Validation result
+ChatService --> MessageService: Validation successful
+MessageService -> Database: Save message (senderId, chatId, content)
+Database --> MessageService: Message saved
+MessageService --> User: Message sent response
+@enduml

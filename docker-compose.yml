@@ -12,6 +12,11 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
     build:
@@ -33,7 +38,8 @@ services:
       DB_SSL_REJECT_UNAUTHORIZED: ${DB_SSL_REJECT_UNAUTHORIZED}
       NODE_ENV: ${NODE_ENV}
     depends_on:
-      - pg_db
+      pg_db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
